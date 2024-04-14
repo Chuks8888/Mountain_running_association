@@ -6,13 +6,13 @@
 class association
 {
     private:
-        std::vector<int> list_of_members;
-        std::vector<int> list_of_tracks;
-        std::vector<int> list_of_races;
-        //League cuurent_league;
+        std::vector<Member> list_of_members;
+        std::vector<Track> list_of_tracks;
+        std::vector<Race> list_of_races;
+        League cuurent_league;
 };
 
-class member
+class Member
 {
     struct Participation
     {
@@ -35,7 +35,7 @@ class Track
     struct Best
     {
         float time;
-        member* runner; 
+        Member* runner; 
     };
     struct Schedule
     {
