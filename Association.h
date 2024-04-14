@@ -2,64 +2,77 @@
 #include <vector>
 #include <iostream>
 #include <string.h>
-//using namespace std;
+#include <map>
+using namespace std;
+
+class Member;
+class Track;
+class Race;
+class League;
+
+struct Mountain
+{
+	string Name;
+	string Country;
+	int elevation[2];
+};
+
 class association
 {
     private:
-        std::vector<Member> list_of_members;
-        std::vector<Track> list_of_tracks;
-        std::vector<Race> list_of_races;
-        League cuurent_league;
+		string Name;
+        vector<Member> members;
+        vector<Track> tracks;
+        vector<Race> races;
+		vector<League> leagues;
+		vector<Mountain> mountains;
 };
 
 class Member
 {
-    struct Participation
-    {
-        std::vector<Race*> races;
-        int place;
-        Participation *next;
-    };
+	friend association;
     private:
-        std::string         Name;
-        int                 Age;
-        bool                Gender;
-        std::string         Membership;
-        long                Performance_index;
-        std::vector<Track*> Best_times;
+		unsigned int Id;
+        string Name;
+        int Age;
+        char Gender;
+        string Membership;
+        long Performance_index;
+		map<unsigned int, Race*>Participation;
+        map<unsigned int, Track*>Best_times;
     public:
 };
 
 class Track
 {
+	friend association;
     struct Best
     {
         float time;
         Member* runner; 
     };
-    struct Schedule
-    {
-        Race *race;
-        Schedule *next;
-    };
     private:
-        std::string         Name;
-        std::string         Mountain;
-        int                 elevation[2];
-        long                Difficulty;
-        Schedule            Race_schedule;
-        double              Average_time;
-        Best                Best_runner;
+		unsigned int Id;
+        string Name;
+		Mountain *Where;
+        long Difficulty;
+		map<unsigned int, Race*>Schedule;
+        double Average_time;
+        Best Best_runner;
     public:
 };
 
 class Race
 {
+	friend association;
     private:
+		unsigned int Id;
     public:
 };
 
 class League
 {
+	friend association;
     private:
+		unsigned int Id;
 };
