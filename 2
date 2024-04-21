@@ -170,265 +170,118 @@ class Member
 class Track
 {
 	friend Association;
-
-    public:
-		// Constructors
-        Track(string name, Mountain mountain, int length, unsigned int difficulty = 5);
-        Track(const Track&);
-
-		//	If the Track is being deconstructed we need to remove
-		//	all of the things that point to it. For example
-		//	If we were to remove a Track
-		//	that had like 10 Races on it already,
-		//	Should we also deconstruct the reces? or simply set Track pointers
-		//	to nullptr and keep the Race, that now appearently took
-		//	place nowhere?
-		//	Or maybe, we shouldnt be able to remove a track that was 
-		//	already used?
-        ~Track();
-
-		// Display information about the track
-        void Print() const; 
-
-		// Displays more information on best runner
-        void Print_Best() const; 
-
-		// prints unfinished races
-		void Print_future_race() const; 
-
-        // adds race to the map in the Data parameter
-		void Add_race(const Race&);
-
-		// finishes race with give race id
-		// which calculates the average time 
-		// and looks for best time to compare it to
-		// the current one on the track
-		void Finish_race(unsigned int);
-
-		// Removes the Race object pointer from Data map
-		// removing a race may also remove the best runner
-        void Remove_race(const Race&); 
-        void Remove_race(const unsigned int);
-
+    friend Race;
+    struct Best
+    {
+        float time;
+        Member* runner; 
+    };
     private:
-		//	Best structure holds a pointer to the
-		//	Member class object that achieved the 
-		//	Best tme of all on this race track
-		struct Best
-		{
-			float time;
-			Member* runner; 
-		};
-
-		//	Structure of the track's record time
-        Best Best_time;
-
 		//	The static paramater Ids work pretty much
 		//	the same as in class Member
         static unsigned int Ids;
 		const unsigned int Id;
+
         const string Name;
-
-		//	Pointer to the mountain where the track
-		//	is located
-		const Mountain *Where; 
-		
-		//	ranges from 1 - 10
-        unsigned int Difficulty;
-
-		//	In kilometers
-        double Length; 
-
-		//	Pointers of past, present and future races
-		map<unsigned int, Race*> Data; 
-
-		//	Average time it takes to finish the track
-		//	its is calculated from Data collected form
-		//	Races held on this track
+		const Mountain *Where; // On what mountain is the track
+        unsigned int Difficulty; // ranges from 1 - 10
+        double Length; // in kilometers
+		map<unsigned int, Race*> Schedule; // Schdule of past, present and future races
         double Average_time;
+        Best Best_time; // Structure of the track's record time 
+    public:
+        Track(string name, Mountain mountain, int length, unsigned int difficulty = 5); // normal constructor
+        Track(const Track&); // copy constructor
+        ~Track();
+
+        void Print() const; // Display information about the track
+        void Print_Best() const; // Displays more information on best runner
+		void Print_future_race() const; // prints unfinished races
+        void Add_race(const Race&); // adds race to the map
+									//
+		// removing a race may also remove the best runner
+        void Remove_race(const Race&); 
+        void Remove_race(const unsigned int);
 
         double operator-=(double); // decreases the length
         double operator+=(double); // increases the length
         unsigned int operator++(); // increase the difficulty
         unsigned int operator--(); // decrease the difficulty
-        
-		//	If the best runner or the race he was in was removed
-        Member* search_for_best();        
-	
-		//	after a race is finished or destroyed the average time has to change
-		double Recalculate_average(); 
-
-		//	gets reference to parameters
-        int& get_difficulty(); int& get_length(); int& get_average();
-
-		//	gets id parameter
+    private:
+        void Finish_race(unsigned int); // Used only from object class Race
+        Member* search_for_best(); // If the best runner or the race he was in was removed
+        double Recalculate_average(); // after a race is finished or destroyed the average time has to change
+        int& get_diff(); int& get_length(); int& get_average(); // gets reference to parameters
         const unsigned int get_id();
 };
 
 class Race
 {
 	friend Association;
-	friend League;
-
-    public:
-		//	Constructors, to construct a Race we need to have 
-		//	selected a Track for it, if it's nullptr
-		//	then the construction will not happen
-        Race(string Name, Track *where);
-        Race(const Race&);
-        ~Race();
-
-        // Displays info on race
-        void Print() const;         
-		
-		//	finishes race and uses the public method Finish_race
-		//	from class object Track so that it can do its thing	
-		void Finish_race(); 
-
-		// Parameter getting methods
-		// Most likely will be used by class Track object
-		// when its calcualting its parameters
-		double Get_Average_time() const;
-		double Get_Winner_time() const;
-		Member *Get_winner() const;
-
-		// Adds/Removes a runner to the Race, and ads/removes Race pointer
-		// to The Member's Participation map
-        void Add_runner(const Member&);
-        void Remove_runner(const Member&);
-        void Remove_runner(const unsigned int);
-
-		// reaassigns the track
-		// Therefore removing the Race pointer from
-		// the Track "Data" map
-        void operator=(const Track&);
-	
-	//	The structure Participants, holds information of
-	//	who is taking part in the race, how many people.
-	//	Also after the race is finished it holds a pointer
-	//	to the winner and other parameters like Average time
     struct Participants
     {
-		//	Map of runners, key is their id
         map<unsigned int, Member*> Runners;
-		
-		//	These vectors follow the same indexing
-		//	as the map, so if someone is [0] in the 
-		//	Runners map, then their index is also going 
-		//	to be [0] in the Places vector and Times vector 
         vector<unsigned int> Places;
         vector<double> Times;
-
         int Number_of_runners;
-
-		//	Parameters after the race is finished
         double Average_time;
-		Member *Winner;
-        double Winner_time;
+        double winner_time;
     };
-
     private:
-		//	The Ids parameter works the same as in
-		//	Track or Member class
         static unsigned int Ids;
 		const unsigned int Id;
         const string Name;
-
-		//	Pointer to the Track where the 
-		//	Race takes place
         Track *Where;
-
-		//	Structure parameter that was explained above
         Participants race_participants;
-
-		//	Bolean for when the race is finished
+        Member *Winner;
         bool finished;
+    public:
+        Race(string Name, Track *where);
+        Race(const Race&);
+        ~Race();
+        
+        void Print() const; // Displays info
+        void Finish_race(); // finishes race and calculates places, winner, avg_time etc.
 
-		//	Gets id of the race
+        void Add_runner(const Member&);
+        void Remove_runner(const Member&);
+        void Remove_runner(const unsigned int);
+        void operator=(const Track&); // reaassigns the track
+    private:
         const unsigned int get_id();
-
-		//	checks if the race is finished
-        bool Is_finished() const; 
-
-		//	Methods that are called after the race has finished
-        void Calculate_average_time(); 
-		void Assign_places(); 
-        void Declare_winner();
+        bool Is_finished() const; // checks if the race is finished
+        void Calculate_average(); // calculates average time
+        void Assign_places(); // assigns places based on runners's times
+        void Declare_winner(); // when race is finished
 };
 
 class League
 {
 	friend Association;
-    public:
-		// Constructors
-        League(string name, string Reward);
-        League(const League&);
-
-		// Removing a League from existance requires
-		// removing Race pointers from other classes
-		// i.e. Member, Track
-        ~League();
-
-		// Ads a Race to the League, and assigns runners to the 
-		// race that are already in the League_runners map
-        void Add_Race(const Race&);
-
-		// Removing a Race is the same as just using the Race
-		// deconstructor
-        void Remove_Race(const Race&); void Remove_Race(const unsigned int);
-
-		// Ads a runner to the League, and assigns him/her 
-		// to all the races that are defined in the League class
-        void Add_runner(const Member&);
-
-		// Removing a runner is like using the remove_race method
-		// in the Member class for all the races in the League
-        void Remove_runner(const Member&); void Remove_runner(const unsigned int);
-
-		// stops from edditing the league
-        void Start_League();
-
-		// finishes next race, or finishes league
-        void Next_stage(); 
     private:
-
-		//	Works the same as in the previous classes
         static unsigned int Ids;
 		const unsigned int Id;
         const string Name;
-	
-		//	This time there is a reward, since its a league
-		//	But the reward is a string so it can be either
-		//	the sum of money in words, or a trophy, it all
-		//	depedns on the users choice
         const string Reward;
-		
-		//	Like the Race, a League has its map of runners
-		//	All of the runners are automatically assigend to all 
-		//	the races in the League
         map<unsigned int, Member*> League_Runners;
-
-		//	The league has its own map of Race pointers
-		//	the key is Race object's id
-		//	max 5 races a league
         map<unsigned int, Race*> League_Races;
-        unsigned int number_of_races; 
-
-		//	The winner of the league
+        unsigned int number_of_races; // max 5 races a league
         Member *Winner;
+        bool In_progress; // when its 1 no more runners or races can be adeed
+        bool finished; // when its 1 the league is over
+    public:
+        League(string name, string Reward);
+        League(const League&);
+        ~League();
 
-		//	when its 1 no more runners or races can be adeed
-        bool In_progress; 
-		//	when its 1 the league is over
-        bool finished;
-
-		// 0 - still under construction, 1 - in progress, 2 - finished
-		int Get_status();
-	
-		// declares winner based on average time in all races
-        void Declare_winner(); 
-
-		// gets if of the League
+        void Add_Race(const Race&);
+        void Remove_Race(const Race&); void Remove_Race(const unsigned int);
+        void Add_runner(const Member&);
+        void Remove_runner(const Member&); void Remove_runner(const unsigned int);
+        void Start_League(); // stops from edditing the league
+        void Next_stage(); // finishes next race, or finishes league
+    private:
+        void Declare_winner(); // declares winner based on average time in all races
         const unsigned int get_id();
 
 };
