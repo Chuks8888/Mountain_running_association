@@ -50,13 +50,22 @@ class Association
 		void Edit_Track(unsigned int id);
 
 		//	Prints the information on the classes the associaition has
-        int Print_Unfinished_Races(); // the int is for number of races 
-		int Print_Finished_Races(); 
-		int Print_All_Races();
-        void Print_Members();
-        void Print_Tracks();
-		void Print_Leagues();
-		void Print_Mountains();
+        int Print_Unfinished_Races() const; // the int is for number of races 
+		int Print_Finished_Races() const; 
+		int Print_All_Races() const;
+        void Print_Members() const;
+        void Print_Tracks() const;
+		void Print_Leagues() const;
+		void Print_Mountains() const;
+
+		// Getting the objects them for testing without changing
+		// their conents
+		// Used for testing
+		const map<unsigned int, Member*> Get_member_map() const;
+        const map<unsigned int, Track*> Get_tracks_map() const;
+        const map<unsigned int, Race*> Get_races_map() const;
+		const map<unsigned int, League*> Get_leagues_map() const;
+		const vector<Mountain*> Get_mountaints_vector() const; 
 
     private:
 		//	Name of the associaition
@@ -99,7 +108,7 @@ class Member
 		//	For the constructor all one needs are those parameters or
 		//	simply use the copy constructor. However I cannot see any
 		//	use for the copy construtor
-        Member(string name, int age, char gender = '-', int membership = 1);
+        Member(string name, int age, const char gender = '-', int membership = 1);
         Member(const Member&);
 
 		//	The deconstructor of Member object, removes the pointers pointing
@@ -140,11 +149,11 @@ class Member
 		//	the same id, if the class is loaded from txt file
 		//	the parameter Ids will take the highest value there is
         static unsigned int Ids;
-		const unsigned int Id;
+		unsigned int Id;
 
-        const string Name;
+        string Name;
         int Age;
-        const char Gender;
+        char Gender;
 
 		//	0 - no membership; 1 - standard; 2 - gold
         unsigned int Membership; 
@@ -160,11 +169,11 @@ class Member
         unsigned int get_membership() const;
 
 		//	gets id of member
-        unsigned int get_id() const;
+        const unsigned int get_id() const;
 
 		// checks for any participation
-        bool empty() const;     
-		
+        bool empty() const; 
+
 };
 
 class Track
@@ -226,12 +235,12 @@ class Track
 		//	The static paramater Ids work pretty much
 		//	the same as in class Member
         static unsigned int Ids;
-		const unsigned int Id;
-        const string Name;
+		unsigned int Id;
+        string Name;
 
 		//	Pointer to the mountain where the track
 		//	is located
-		const Mountain *Where; 
+		Mountain *Where; 
 		
 		//	ranges from 1 - 10
         unsigned int Difficulty;
@@ -290,6 +299,7 @@ class Race
 		// when its calcualting its parameters
 		double Get_Average_time() const;
 		double Get_Winner_time() const;
+		double Get_time(unsigned int id) const;
 		Member *Get_winner() const;
 
 		// Adds/Removes a runner to the Race, and ads/removes Race pointer
@@ -331,8 +341,8 @@ class Race
 		//	The Ids parameter works the same as in
 		//	Track or Member class
         static unsigned int Ids;
-		const unsigned int Id;
-        const string Name;
+		unsigned int Id;
+        string Name;
 
 		//	Pointer to the Track where the 
 		//	Race takes place
@@ -394,14 +404,14 @@ class League
 
 		//	Works the same as in the previous classes
         static unsigned int Ids;
-		const unsigned int Id;
-        const string Name;
+		unsigned int Id;
+        string Name;
 	
 		//	This time there is a reward, since its a league
 		//	But the reward is a string so it can be either
 		//	the sum of money in words, or a trophy, it all
 		//	depedns on the users choice
-        const string Reward;
+        string Reward;
 		
 		//	Like the Race, a League has its map of runners
 		//	All of the runners are automatically assigend to all 
