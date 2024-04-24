@@ -3,6 +3,7 @@
 #include <string.h>
 #include <vector>
 #include <map>
+#include <algorithm>
 using namespace std;
 
 class Association;
@@ -91,13 +92,14 @@ struct Mountain
 	string Name;
 	string Country;
 
+	//highest point in meters
+	int Height;
+	
 	//	Map of Track object pointers, that are assigned
 	//	when constructing a Track object, the key is the 
 	//	Track id
     map<unsigned int, Track*> mountains_tracks;
-
-	//	0 - lowest point ; 1 - highest point
-	int elevation[2]; 
+ 
 };
 
 class Member

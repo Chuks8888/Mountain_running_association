@@ -2,13 +2,24 @@
 
 void Testing_adding_to_association(Association &Club)
 {
-	//Testing the adding of things to the association
-	
-	int size = 
-	// Firstly we use every add method
-	int id1 = Club.Add_Member();
-	int id3 = Club.Add_Track();
-	int id4 = Club.Add_Race();
-	int id5 = Club.Add_League();
+	// Creatin a Mountain
+	Mountain Temp = {"Tatry", "Poland", 2655};
 
+	// Takes size before addig
+	int size = Club.Get_mountaints_vector().size();
+
+	// Ads a mountain
+	Club.Add_Mountain(Temp);
+
+	// Getting the vector of the mountains after adding
+	const vector <Mountain*> Temp2 = Club.Get_mountaints_vector();
+
+	// Checking size correctness
+	if((size+1) != Temp2.size())
+		cerr << "size is wrong after adding mountain";
+
+	// Checking if the mountain is found in the vecotr
+	const vector <Mountain*>::const_iterator Iterator = find(Temp2.begin(), Temp2.end(), Temp);
+	if(*Iterator != &Temp )
+		cerr << "The Mountain was not found";
 }
