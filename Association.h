@@ -59,14 +59,13 @@ class Association
 		void Print_Leagues() const;
 		void Print_Mountains() const;
 
-		// Getting the objects them for testing without changing
-		// their conents
-		// Used for testing
-		const map<unsigned int, Member*> Get_member_map() const;
-        const map<unsigned int, Track*> Get_tracks_map() const;
-        const map<unsigned int, Race*> Get_races_map() const;
-		const map<unsigned int, League*> Get_leagues_map() const;
-		const vector<Mountain*> Get_mountaints_vector() const; 
+		// Getting the objects to check their content
+		// ONLY USED FOR TESTING
+		map<unsigned int, Member*> Get_member_map() const;
+        map<unsigned int, Track*> Get_tracks_map() const;
+        map<unsigned int, Race*> Get_races_map() const;
+		map<unsigned int, League*> Get_leagues_map() const;
+		vector<Mountain*> Get_mountaints_vector() const; 
 
     private:
 		//	Name of the associaition
@@ -142,6 +141,9 @@ class Member
 		//	Find the race if the Member took part in it
 		//	either do it by id of race or its object
         bool Find_race(const Race&) const; bool Find_race(const unsigned int) const;
+
+		// Get method used for testing
+		const map<unsigned int, Race*> Get_Participation() const;
 
 	private:
 		//	the static parameter Ids keeps track of how
@@ -220,6 +222,9 @@ class Track
 		// removing a race may also remove the best runner
         void Remove_race(const Race&); 
         void Remove_race(const unsigned int);
+		
+		// Get method used for testing
+		const map<unsigned int, Race*> Get_Data() const;
 
     private:
 		//	Best structure holds a pointer to the
@@ -302,7 +307,7 @@ class Race
 		double Get_Average_time() const;
 		double Get_Winner_time() const;
 		double Get_time(unsigned int id) const;
-		Member *Get_winner() const;
+		const Member *Get_winner() const;
 
 		// Adds/Removes a runner to the Race, and ads/removes Race pointer
 		// to The Member's Participation map
@@ -310,10 +315,11 @@ class Race
         void Remove_runner(const Member&);
         void Remove_runner(const unsigned int);
 
-		// reaassigns the track
-		// Therefore removing the Race pointer from
-		// the Track "Data" map
-        void operator=(const Track&);
+		// Used to get the pointer to the Track object
+		const Track* Get_Where() const;
+
+		// Get method used for testing
+		const map<unsigned int, Member*> Get_Participants() const;
 	
 	//	The structure Participants, holds information of
 	//	who is taking part in the race, how many people.
@@ -362,6 +368,11 @@ class Race
 		//	checks if the race is finished
         bool Is_finished() const; 
 
+		// reaassigns the track
+		// Therefore removing the Race pointer from
+		// the Track "Data" map
+        void operator=(const Track&);
+
 		//	Methods that are called after the race has finished
         void Calculate_average_time(); 
 		void Assign_places(); 
@@ -402,6 +413,14 @@ class League
 
 		// finishes next race, or finishes league
         void Next_stage(); 
+
+		// get method for the winner member
+		const Member *Get_winner() const;
+
+		// Get method used for testing
+		const map<unsigned int, Member*> Get_Runners() const;
+		const map<unsigned int, Race*> Get_Races() const;
+
     private:
 
 		//	Works the same as in the previous classes
