@@ -193,12 +193,7 @@ class Track
 		//	all of the things that point to it. For example
 		//	If we were to remove a Track
 		//	that had like 10 Races on it already,
-		//	Should we also deconstruct the reces? or simply set Track pointers
-		//	to nullptr and keep the Race, that now appearently took
-		//	place nowhere?
-		//	Or maybe, we shouldnt be able to remove a track that was 
-		//	already used?
-        ~Track();
+		//	We would then need to remove those 10 races too
 
 		// Display information about the track
         void Print() const; 
@@ -256,6 +251,7 @@ class Track
         double Length; 
 
 		//	Pointers of past, present and future races
+		//	The key to the map is Race's Id
 		map<unsigned int, Race*> Data; 
 
 		//	Average time it takes to finish the track
@@ -278,7 +274,7 @@ class Track
         int& get_difficulty(); int& get_length(); int& get_average();
 
 		//	gets id parameter
-        const unsigned int get_id();
+        const unsigned int get_id() const;
 };
 
 class Race
@@ -288,17 +284,21 @@ class Race
 
     public:
 		//	Constructors, to construct a Race we need to have 
-		//	selected a Track for it, if it's nullptr
+		//	selected a Track and a league for it, if the Track is nullptr
 		//	then the construction will not happen
-        Race(string Name, Track *where);
+        Race(string Name, Track *where, League *Which_League = nullptr);
         Race(const Race&);
+
+		//	The deconstruction of the Race, means that we need
+		//	to remove all the object pointing to it, i.e.
+		//	class Member, class Track, class League
         ~Race();
 
         // Displays info on race
         void Print() const;         
 		
 		//	finishes race and uses the public method Finish_race
-		//	from class object Track so that it can do its thing	
+		//	from object Track *Where parameter	
 		void Finish_race(); 
 
 		// Parameter getting methods
@@ -356,6 +356,10 @@ class Race
 		//	Race takes place
         Track *Where;
 
+		//	Pointer to the League it is a part of
+		//	If it is not a part of any, it's just nullptr
+		League *Which_League;
+
 		//	Structure parameter that was explained above
         Participants race_participants;
 
@@ -363,7 +367,7 @@ class Race
         bool finished;
 
 		//	Gets id of the race
-        const unsigned int get_id();
+        const unsigned int get_id() const;
 
 		//	checks if the race is finished
         bool Is_finished() const; 
@@ -404,8 +408,8 @@ class League
 		// to all the races that are defined in the League class
         void Add_runner(const Member&);
 
-		// Removing a runner is like using the remove_race method
-		// in the Member class for all the races in the League
+		// Removing a runner acts as removing him from
+		// All the races belonging to the league
         void Remove_runner(const Member&); void Remove_runner(const unsigned int);
 
 		// stops from edditing the league
@@ -417,7 +421,7 @@ class League
 		// get method for the winner member
 		const Member *Get_winner() const;
 
-		// Get method used for testing
+		// temporary get method used for testing
 		const map<unsigned int, Member*> Get_Runners() const;
 		const map<unsigned int, Race*> Get_Races() const;
 
@@ -460,6 +464,6 @@ class League
         void Declare_winner(); 
 
 		// gets if of the League
-        const unsigned int get_id();
+        const unsigned int get_id() const;
 
 };
