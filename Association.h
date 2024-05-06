@@ -135,8 +135,8 @@ class Member
 		//	Adds/Removes a Race object pointer to/from the 
 		//	Participation parameter, which is a map of Race 
 		//	object pointers where the key is the id of the race
-        void Add_race(const Race &);
-        void Remove_race(const Race&); void Remove_race(const unsigned int);
+        void Add_race(Race&);
+        void Remove_race(Race&); void Remove_race(const unsigned int);
 
 		//	Find the race if the Member took part in it
 		//	either do it by id of race or its object
@@ -320,6 +320,9 @@ class Race
 
 		// Get method used for testing
 		const map<unsigned int, Member*> Get_Participants() const;
+
+		//	Gets id of the race
+        const unsigned int get_id() const;
 	
 	//	The structure Participants, holds information of
 	//	who is taking part in the race, how many people.
@@ -365,9 +368,6 @@ class Race
 
 		//	Bolean for when the race is finished
         bool finished;
-
-		//	Gets id of the race
-        const unsigned int get_id() const;
 
 		//	checks if the race is finished
         bool Is_finished() const; 
