@@ -40,12 +40,12 @@ long Member::Calculate_performance()
 	if(Membership != 2)
 		return Membership;
 
-	map<unsigned int, Race*>::const_iterator i = Participation.begin();
+	map<unsigned int, Race*>::const_iterator i;
 
 	if(Participation.size() > 5)
 
 
-	for(i; i != Participation.end(); ++i)
+	for(i = Participation.begin(); i != Participation.end(); ++i)
 	{
 		double time = i->second->Get_time(Id);
 		double avg_time = i->second->Get_Average_time();
@@ -68,7 +68,6 @@ long Member::Calculate_performance()
 
 		else if(difference >0)
 			Performance_index -=100;
-
-}
-	return Performance_index;
+	}
+return this->Performance_index;
 }
