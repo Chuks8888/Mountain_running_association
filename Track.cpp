@@ -48,4 +48,30 @@ Track::Track(string name, Mountain mountain, int length, unsigned int difficulty
 	else
 		cout << "No best runner recorded yet." << endl;
 }
-       
+
+void Track::Print_Best()  const
+{
+	if (Best_time.runner != nullptr)
+	{
+        cout << "Best Time: " << Best_time.time << " seconds" << endl;
+		Best_time.runner->Print();
+	} 
+	else
+		cout << "No best runner recorded yet." << endl;
+}
+
+void Track::Add_race(Race& race)
+{
+	Data.insert({race.get_id(), &race});
+}
+
+void Track::Finish_race(unsigned int raceId)
+{
+	const auto& i = Data.find(raceId);
+	if(raceId == i->first)
+	{
+		
+	}
+}
+
+

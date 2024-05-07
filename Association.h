@@ -208,7 +208,7 @@ class Track
 		void Print_future_race() const; 
 
         // adds race to the map in the Data parameter
-		void Add_race(const Race&);
+		void Add_race(Race&);
 
 		// finishes race with give race id
 		// which calculates the average time 
@@ -329,6 +329,9 @@ class Race
 
 		//	Gets the name of the race
 		const string get_name() const;
+
+		//	checks if the race is finished
+        bool Is_finished() const; 
 	
 	//	The structure Participants, holds information of
 	//	who is taking part in the race, how many people.
@@ -374,9 +377,6 @@ class Race
 
 		//	Bolean for when the race is finished
         bool finished;
-
-		//	checks if the race is finished
-        bool Is_finished() const; 
 
 		// reaassigns the track
 		// Therefore removing the Race pointer from
