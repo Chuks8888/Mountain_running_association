@@ -4,16 +4,11 @@ using namespace std;
 
 unsigned int Member::Ids = 0;
 
-Member::Member(string name, int age, const char gender, int membership)
+Member::Member(string name, int age, const char gender, int membership): Name(name), Age(age), Gender(gender), Membership(membership)
 {
 	const unsigned int temp = Ids;
 	Id = Ids;
 	Ids++;
-
-	Name = name;
-	Age = age;
-	Gender = gender;
-	Membership = membership;
 
 	Performance_index = 0.0;
 }
@@ -22,12 +17,10 @@ Member::~Member()
 {
 	if(!empty())
 	{
-		map<unsigned int, Race*>::const_iterator i = Participation.begin();
-		do
+		for(auto& race: Participation)
 		{
-			i->second->Remove_runner(Id);
-			++i;
-		} while (i != Participation.end());
+			race.second->Remove_runner(Id);
+		}
 		Participation.clear();
 	}
 }
@@ -41,17 +34,18 @@ void Member::Print() const
 		cout << "Performance index: " << Performance_index << endl;
 	cout << "Gender: " << Gender << endl;
 	cout << "Age: " << Age << endl;
-	cout << "Participated in race: " << endl;
 
-	if(!Participation.empty())
+	if(!empty())
 	{
-		map<unsigned int, Race*>::const_iterator i = Participation.begin();
-		do
+		cout << "Participated in race: " << endl;
+
+		for(auto& race: Participation)
 		{
-			cout << i->first << " " << i->second << endl;
-			++i;
-		} while (i != Participation.end());
+			cout << "Race: " << race.second->get_name() << " " << race.second->get_id() << endl;
+		}
 	}
+	else
+		cout << "Not participated in any races";
 }
 
 long Member::Calculate_performance()

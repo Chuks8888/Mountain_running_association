@@ -145,6 +145,12 @@ class Member
 		// Get method used for testing
 		const map<unsigned int, Race*> Get_Participation() const;
 
+		//	gets id of member
+        const unsigned int get_id() const;
+
+		//	Gets name of the runner
+		const string get_name() const;
+
 	private:
 		//	the static parameter Ids keeps track of how
 		//	many objects of class Member were created,
@@ -171,9 +177,6 @@ class Member
 
 		//	gets Membership parameter
         unsigned int get_membership() const;
-
-		//	gets id of member
-        const unsigned int get_id() const;
 
 		// checks for any participation
         bool empty() const; 
@@ -323,6 +326,9 @@ class Race
 
 		//	Gets id of the race
         const unsigned int get_id() const;
+
+		//	Gets the name of the race
+		const string get_name() const;
 	
 	//	The structure Participants, holds information of
 	//	who is taking part in the race, how many people.

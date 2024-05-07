@@ -17,4 +17,35 @@ Track::Track(string name, Mountain mountain, int length, unsigned int difficulty
 	Best_time.time = 0.0;
 }
 
-        
+ void Track::Print() const 
+{
+    cout << "Track Name: " << Name << endl;
+    cout << "Location: " << Where->Name << endl;
+    cout << "Difficulty: " << Difficulty << "/10" << endl;
+    cout << "Length: " << Length << " kilometers" << endl;
+    
+    if (!Data.empty()) 
+	{
+        cout << "Number of Races: " << Data.size() << endl;
+        cout << "Races:\n";
+
+        for (const auto& pair : Data) 
+		{
+            cout << "Race ID: " << pair.first << endl;
+            cout << "Name: " << pair.second->get_name() << endl << endl; 
+        }
+	} 
+	else 
+        cout << "No races held on this track yet." << endl;
+
+    cout << "Average Time to Finish: " << Average_time << " seconds" << endl;
+
+    if (Best_time.runner != nullptr)
+	{
+        cout << "Best Runner: " << Best_time.runner->get_name()<< endl;
+        cout << "Best Time: " << Best_time.time << " seconds" << endl;
+	} 
+	else
+		cout << "No best runner recorded yet." << endl;
+}
+       
