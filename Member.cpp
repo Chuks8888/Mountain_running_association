@@ -57,11 +57,9 @@ long Member::Calculate_performance()
 	if(empty())
 		return 0;
 
-	map<unsigned int, Race*>::const_iterator i;
-
-	i = Participation.begin();
+	map<unsigned int, Race*>::const_iterator i = Participation.begin();
 	if(Participation.size() > 5)
-		for(int j = 0; j <Participation.size()-5; j++)
+		for(int j = 0; j <Participation.size()-5; j++) 
 			i++;
 
 	for(i; i != Participation.end(); ++i)
@@ -112,9 +110,11 @@ unsigned int Member::operator++()
 	return Age;
 }
 
-void Member::Add_race(Race &race)
+void Member::Add_race(const Race &race1)
 {
-	Participation.insert({race.get_id(), &race});
+	const Race* race = &race1;
+
+	Participation.insert({const_cast<Race*>(race)->get_id(), const_cast<Race*>(race)});
 }
 
 void Member::Remove_race(Race& race)
