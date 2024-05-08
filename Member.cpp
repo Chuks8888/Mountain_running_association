@@ -13,6 +13,20 @@ Member::Member(string name, int age, const char gender, int membership): Name(na
 	Performance_index = 0.0;
 }
 
+Member::Member(const Member& member)
+{
+	Id = member.Id;
+	if (member.Ids > Ids)
+		Ids = member.Ids;
+
+	Name = member.Name;
+	Age = member.Age;
+	Gender = member.Gender;
+	Membership = member.Membership;
+
+	Performance_index = member.Performance_index;
+}
+
 Member::~Member()
 {
 	if(!empty())
@@ -112,14 +126,19 @@ unsigned int Member::operator++()
 
 void Member::Add_race(const Race &race1)
 {
-	const Race* race = &race1;
-
-	Participation.insert({const_cast<Race*>(race)->get_id(), const_cast<Race*>(race)});
+	if(!Find_race(race1.get_id()))
+	{
+		const Race* race = &race1;
+		Participation.insert({const_cast<Race*>(race)->get_id(), const_cast<Race*>(race)});
+	}
+	else
+		cerr << "The member already participates this race";
 }
 
 void Member::Remove_race(Race& race)
 {
 	race.Remove_runner(*this);
+	Remove_race(race.get_id());
 } 
 
 void Member::Remove_race(const unsigned int id)
@@ -136,13 +155,9 @@ void Member::Remove_race(const unsigned int id)
 
 bool Member::Find_race(const Race& race) const
 {
-	if(empty())
-		return 0;
-	map<unsigned int, Race*>::const_iterator i = Participation.find(race.get_id());
-	if(i->second == &race)
-		return 1;
-	return 0;
+	return Find_race(race.get_id());
 } 
+
 bool Member::Find_race(const unsigned int id) const
 {
 	if(empty())
