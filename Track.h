@@ -1,4 +1,9 @@
+#ifndef TRACK
+#define TRACK
+
+#pragma once
 #include "Association.h"
+
 class Track
 {
 	friend Association;
@@ -95,3 +100,5 @@ class Track
 		//	gets id parameter
         const unsigned int get_id() const;
 };
+
+#endif

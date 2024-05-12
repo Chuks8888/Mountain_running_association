@@ -1,4 +1,9 @@
+#ifndef RACE
+#define RACE
+
+#pragma once
 #include "Association.h"
+
 class Race
 {
 	friend Association;
@@ -107,3 +112,5 @@ class Race
 		void Assign_places(); 
         void Declare_winner();
 };
+
+#endif

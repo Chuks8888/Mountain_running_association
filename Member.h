@@ -1,4 +1,7 @@
-#include <Association.h>
+#ifndef MEMBER
+#define MEMBER
+
+#include "Association.h"
 
 class Member
 {
@@ -83,3 +86,5 @@ class Member
 		// checks for any participation
         bool empty() const; 
 };
+
+#endif

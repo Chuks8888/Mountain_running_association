@@ -1,4 +1,9 @@
+#ifndef LEAGUE
+#define LEAGUE
+
+#pragma once
 #include "Association.h"
+
 class League
 {
 	friend Association;
@@ -83,3 +88,5 @@ class League
         const unsigned int get_id() const;
 
 };
+
+#endif

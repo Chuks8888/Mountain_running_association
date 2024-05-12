@@ -1,11 +1,13 @@
-#ifndef ASSOCIATION
-#define ASSOCIATION
-
 #include <iostream>
 #include <string.h>
 #include <vector>
 #include <map>
 #include <algorithm>
+
+//#include "Member.h"
+//#include "Race.h"
+//#include "League.h"
+//#include "Track.h"
 
 using namespace std;
 
@@ -103,5 +105,3 @@ struct Mountain
     map<unsigned int, Track*> mountains_tracks;
  
 };
-
-#endif
