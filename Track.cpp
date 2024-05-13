@@ -1,9 +1,11 @@
-#include "Association.h"
-
+# include "Track.h"
+# include "Member.h"
+# include "Race.h"
 unsigned int Track::Ids = 0;
 
 Track::Track(string name, Mountain mountain, int length, unsigned int difficulty)
 {
+	// Gives the object its id and increases the number of objects i.e. Ids
 	Id = Ids;
 	Ids ++;
 
@@ -34,13 +36,16 @@ Track::Track(string name, Mountain mountain, int length, unsigned int difficulty
             cout << "Race ID: " << pair.first << endl;
             cout << "Name: " << pair.second->get_name() << endl << endl; 
         }
-	} 
-	else 
-        cout << "No races held on this track yet." << endl;
+	} else cout << "No races held on this track yet." << endl;
 
     cout << "Average Time to Finish: " << Average_time << " seconds" << endl;
 
-    if (Best_time.runner != nullptr)
+	Print_Best();
+}
+
+void Track::Print_Best()  const
+{
+	if (Best_time.runner != nullptr)
 	{
         cout << "Best Runner: " << Best_time.runner->get_name()<< endl;
         cout << "Best Time: " << Best_time.time << " seconds" << endl;
@@ -49,19 +54,23 @@ Track::Track(string name, Mountain mountain, int length, unsigned int difficulty
 		cout << "No best runner recorded yet." << endl;
 }
 
-void Track::Print_Best()  const
+void Track::Print_future_race() const
 {
-	if (Best_time.runner != nullptr)
+	cout << "Future races: " << endl << endl;
+	for(const auto& race : Data)
 	{
-        cout << "Best Time: " << Best_time.time << " seconds" << endl;
-		Best_time.runner->Print();
-	} 
-	else
-		cout << "No best runner recorded yet." << endl;
+		if(!race.second->Is_finished())
+		{
+			cout << "Name: " << race.second->get_name();
+			cout << "ID: " << race.second->get_id() << endl;
+		}
+	}
 }
 
 void Track::Add_race(Race& race)
 {
+	// Inserts the Race* into the Data parameter
+	// map<unsigned int (ID of race), Race*> Data;
 	Data.insert({race.get_id(), &race});
 }
 
@@ -70,8 +79,19 @@ void Track::Finish_race(unsigned int raceId)
 	const auto& i = Data.find(raceId);
 	if(raceId == i->first)
 	{
-		
-	}
-}
+		if(!i->second->Is_finished())
+		{
+			// Swithces the finished bollean to 1
+			i->second->Finish_race();
 
+			// Checks if the winner of the race has the best time
+			Compare_best(i->second->Get_winner());
+
+			// Calculates the average time now also 
+			// using the new data from the finished race
+			Recalculate_average();
+		}
+	}
+	
+}
 

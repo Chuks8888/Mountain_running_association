@@ -89,7 +89,10 @@ class Track
         unsigned int operator--(); // decrease the difficulty
         
 		//	If the best runner or the race he was in was removed
-        Member* search_for_best();        
+        Member* search_for_best();
+
+		//	Checks if a winner of a race has the best time
+		void Compare_best(const Member*);
 	
 		//	after a race is finished or destroyed the average time has to change
 		double Recalculate_average(); 
