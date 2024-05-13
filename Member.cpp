@@ -1,4 +1,5 @@
-#include "Association.h"
+#include "Member.h"
+#include "Race.h"
 #include <string>
 using namespace std;
 
@@ -71,36 +72,37 @@ long Member::Calculate_performance()
 	if(empty())
 		return 0;
 
-	map<unsigned int, Race*>::const_iterator i = Participation.begin();
-	if(Participation.size() > 5)
-		for(int j = 0; j <Participation.size()-5; j++) 
-			i++;
+	double weight = 1.0;
+	double total_weight = 0.0;
 
-	for(i; i != Participation.end(); ++i)
+	for (auto& race : Participation)
 	{
-		double time = i->second->Get_time(Id);
-		double avg_time = i->second->Get_Average_time();
+		double time = race.second->Get_time(Id);
+		double avg_time = race.second->Get_Average_time();
 		double difference = avg_time - time;
 
 		if(difference <= -7.0) 
-			Performance_index += 1000;
+			Performance_index += 1000 * weight;
 
 		else if(difference <= -5.0)
-			Performance_index += 500;
+			Performance_index += 500 * weight;
 
 		else if(difference <= 0)
-			Performance_index += 100;
+			Performance_index += 100 * weight;
 
 		if(difference >= 7.0)
-			Performance_index -=1000;
+			Performance_index -=1000 * weight;
 
 		else if(difference >=5.0)
-			Performance_index -=500;
+			Performance_index -=500 * weight;
 
 		else if(difference >0)
-			Performance_index -=100;
+			Performance_index -=100 * weight;
+
+		total_weight += weight;
+        weight *= 0.9;
 	}
-	return this->Performance_index;
+	return (this->Performance_index / total_weight);
 }
 
 void Member::Cancel_membership()
@@ -145,7 +147,7 @@ void Member::Remove_race(const unsigned int id)
 {
 	if(!empty())
 	{
-		map<unsigned int, Race*>::const_iterator i = Participation.find(id);
+		const auto& i = Participation.find(id);
 		if(i->first == id)
 			i->second->Remove_runner(*this);
 		else
