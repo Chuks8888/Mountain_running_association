@@ -92,7 +92,7 @@ class Track
         Member* search_for_best();
 
 		//	Checks if a winner of a race has the best time
-		void Compare_best(const Member*);
+		void Compare_best(Member*, float time);
 	
 		//	after a race is finished or destroyed the average time has to change
 		double Recalculate_average(); 

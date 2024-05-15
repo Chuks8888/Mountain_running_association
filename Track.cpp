@@ -85,7 +85,7 @@ void Track::Finish_race(unsigned int raceId)
 			i->second->Finish_race();
 
 			// Checks if the winner of the race has the best time
-			Compare_best(i->second->Get_winner());
+			Compare_best(const_cast<Member*>(i->second->Get_winner()), i->second->Get_Winner_time());
 
 			// Calculates the average time now also 
 			// using the new data from the finished race
