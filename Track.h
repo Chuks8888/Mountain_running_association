@@ -36,11 +36,6 @@ class Track
 		// and looks for best time to compare it to
 		// the current one on the track
 		void Finish_race(unsigned int);
-
-		// Removes the Race object pointer from Data map
-		// removing a race may also remove the best runner
-        void Remove_race(const Race&); 
-        void Remove_race(const unsigned int);
 		
 		// Get method used for testing
 		const map<unsigned int, Race*> Get_Data() const;
@@ -93,12 +88,22 @@ class Track
 
 		//	Checks if a winner of a race has the best time
 		void Compare_best(Member*, float time);
+
+		// Removes the Race object pointer from Data map
+		// removing a race may also remove the best runner
+		// When called with the cons reference it deletes the 
+		// Race object from existence in the Association
+		// If by Id then we simply change its track
+		// Both methods can only be called with the 
+		// Association object
+        void Remove_race(const Race&); 
+        void Remove_race(const unsigned int);
 	
 		//	after a race is finished or destroyed the average time has to change
 		double Recalculate_average(); 
 
 		//	gets reference to parameters
-        int& get_difficulty(); int& get_length(); int& get_average();
+        unsigned int& get_difficulty(); double& get_length(); double& get_average();
 
 		//	gets id parameter
         const unsigned int get_id() const;
