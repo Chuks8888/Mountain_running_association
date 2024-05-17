@@ -74,7 +74,11 @@ void Track::Add_race(Race& race)
 {
 	// Inserts the Race* into the Data parameter
 	// map<unsigned int (ID of race), Race*> Data;
-	Data.insert({race.get_id(), &race});
+	if(Data.find(race.get_id())!= Data.end())
+		Data.insert({race.get_id(), &race});
+	else
+	    cout << "Race with ID " << race.get_id() << " already exists." << endl;
+
 }
 
 void Track::Finish_race(unsigned int raceId)
@@ -92,6 +96,11 @@ void Track::Finish_race(unsigned int raceId)
 			Recalculate_average();
 		}
 	}
+}
+
+string Track::Get_Name() const
+{
+	return Name;
 }
 
 const map<unsigned int, Race*> Track::Get_Data() const
@@ -143,7 +152,7 @@ void Track::Compare_best(Member* winner, float time)
 	}
 }
 
-void Track::Remove_race(const Race& race)
+void Track::Remove_race(Race& race)
 {
 	Race* temp = Data.find(race.get_id())->second;
 

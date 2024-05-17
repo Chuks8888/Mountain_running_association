@@ -37,6 +37,12 @@ class Track
 		// the current one on the track
 		void Finish_race(unsigned int);
 		
+		// Gets name of the track
+		string Get_Name() const;
+
+		//	gets id parameter
+        const unsigned int get_id() const;
+		
 		// Get method used for testing
 		const map<unsigned int, Race*> Get_Data() const;
 
@@ -96,7 +102,7 @@ class Track
 		// If by Id then we simply change its track
 		// Both methods can only be called with the 
 		// Association object
-        void Remove_race(const Race&); 
+        void Remove_race(Race&); 
         void Remove_race(const unsigned int);
 	
 		//	after a race is finished or destroyed the average time has to change
@@ -104,9 +110,6 @@ class Track
 
 		//	gets reference to parameters
         unsigned int& get_difficulty(); double& get_length(); double& get_average();
-
-		//	gets id parameter
-        const unsigned int get_id() const;
 };
 
 #endif

@@ -85,6 +85,7 @@ class Member
 
 		// checks for any participation
         bool empty() const; 
+		
 };
 
 #endif

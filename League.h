@@ -19,11 +19,11 @@ class League
 
 		// Ads a Race to the League, and assigns runners to the 
 		// race that are already in the League_runners map
-        void Add_Race(const Race&);
+        void Add_Race(Race&);
 
 		// Removing a Race is the same as just using the Race
 		// deconstructor
-        void Remove_Race(const Race&); void Remove_Race(const unsigned int);
+        void Remove_Race(Race&); void Remove_Race(const unsigned int);
 
 		// Ads a runner to the League, and assigns him/her 
 		// to all the races that are defined in the League class
@@ -41,6 +41,12 @@ class League
 
 		// get method for the winner member
 		const Member *Get_winner() const;
+
+		// Gets the name of the league
+		string Get_Name() const;
+
+		// gets if of the League
+        const unsigned int get_id() const;
 
 		// temporary get method used for testing
 		const map<unsigned int, Member*> Get_Runners() const;
@@ -83,9 +89,6 @@ class League
 	
 		// declares winner based on average time in all races
         void Declare_winner(); 
-
-		// gets if of the League
-        const unsigned int get_id() const;
 
 };
 

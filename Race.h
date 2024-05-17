@@ -13,8 +13,8 @@ class Race
 		//	Constructors, to construct a Race we need to have 
 		//	selected a Track and a league for it, if the Track is nullptr
 		//	then the construction will not happen
-        Race(string Name, Track *where, League *Which_League = nullptr);
-        Race(const Race&);
+        Race(string name, Track *where, League *which_League = nullptr);
+        Race(Race&);
 
 		//	The deconstruction of the Race, means that we need
 		//	to remove all the object pointing to it, i.e.
@@ -107,10 +107,15 @@ class Race
 		// the Track "Data" map
         void operator=(const Track&);
 
+		// Removes all runners from the race and removes other pointers
+		// only used during the deconstruction
+		void clear();
+
 		//	Methods that are called after the race has finished
         void Calculate_average_time(); 
 		void Assign_places(); 
         void Declare_winner();
+		
 };
 
 #endif
