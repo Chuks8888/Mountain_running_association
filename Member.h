@@ -12,7 +12,7 @@ class Member
 		//	simply use the copy constructor. However I cannot see any
 		//	use for the copy construtor
         Member(string name, int age, const char gender = '-', int membership = 1);
-        Member(const Member&);
+        Member(Member&);
 
 		//	The deconstructor of Member object, removes the pointers pointing
 		//	to it the object from other classes like League, Race, Track

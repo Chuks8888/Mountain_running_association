@@ -10,7 +10,7 @@ class League
     public:
 		// Constructors
         League(string name, string Reward);
-        League(const League&);
+        League(League&);
 
 		// Removing a League from existance requires
 		// removing Race pointers from other classes
@@ -45,7 +45,7 @@ class League
 		// Gets the name of the league
 		string Get_Name() const;
 
-		// gets if of the League
+		// gets id of the League
         const unsigned int get_id() const;
 
 		// temporary get method used for testing

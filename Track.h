@@ -11,7 +11,7 @@ class Track
     public:
 		// Constructors
         Track(string name, Mountain mountain, int length, unsigned int difficulty = 5);
-        Track(const Track&);
+        Track(Track&);
 
 		//	If the Track is being deconstructed we need to remove
 		//	all of the things that point to it. For example

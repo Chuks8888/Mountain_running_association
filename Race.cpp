@@ -28,11 +28,6 @@ Race::Race(Race& race): Name(race.Name), Where(race.Where), Which_League(race.Wh
 
 Race::~Race()
 {
-    if (Which_League!= nullptr)
-    {
-        Which_League->Remove_Race(*this);
-    }
-
     clear();
 }
 
@@ -56,12 +51,63 @@ void Race::Print() const
         
 
     cout << "Race participants: " << endl;
-    if(finished)
+    if(!finished)
     {
-        
+        for(const auto& participant : race_participants.Runners)
+        {
+            cout << "Name: " << participant.second->get_name();
+            cout << "Id: " << participant.second->get_id() << endl;
+        }
     }
     else
     {
-
+        vector<double>::const_iterator time = race_participants.Times.begin();
+        vector<unsigned int>::const_iterator places = race_participants.Places.begin();
+        for(const auto& participant : race_participants.Runners)
+        {
+            cout << "Name: " << participant.second->get_name();
+            cout << "Id: " << participant.second->get_id() << endl;
+            cout << "Time: " << *time << endl;
+            cout << "Place: " << *places << endl;
+            time++;
+            places++;
+        }
     }
+}
+
+void Race::Finish_race()
+{
+    Assign_places();
+    Declare_winner();
+    Calculate_average_time();
+
+    Where->Finish_race(Id);
+    finished = true;
+}
+double Race::Get_Average_time() const
+{
+    if(finished) return race_participants.Average_time;
+}
+double Race::Get_Winner_time() const
+{
+    if(finished) return race_participants.Winner_time;
+}
+double Race::Get_time(unsigned int id) const
+{  
+    auto const& participant = race_participants.Runners.find(id);
+    if(participant->first != id)
+    {
+        int i=0;
+        for(map<unsigned int, Member*>::const_iterator temp = race_participants.Runners.begin(); temp != participant; temp++)
+        {
+            i++;
+        }
+        return race_participants.Times[i];
+    }
+    // there is no participant with such id
+    else return -1;
+}
+const Member* Race::Get_winner() const
+{
+    if(finished) return race_participants.Winner;
 }
