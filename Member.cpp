@@ -3,8 +3,6 @@
 #include <string>
 using namespace std;
 
-unsigned int Member::Ids = 0;
-
 Member::Member(string name, int age, const char gender, int membership): Name(name), Age(age), Gender(gender), Membership(membership)
 {
 	const unsigned int temp = Ids;
@@ -126,12 +124,11 @@ unsigned int Member::operator++()
 	return Age;
 }
 
-void Member::Add_race(const Race &race1)
+void Member::Add_race(Race &race1)
 {
 	if(!Find_race(race1.get_id()))
 	{
-		const Race* race = &race1;
-		Participation.insert({const_cast<Race*>(race)->get_id(), const_cast<Race*>(race)});
+		Participation.insert({race1.get_id(), &race1});
 	}
 	else
 		cerr << "The member already participates this race";
@@ -175,14 +172,19 @@ const map<unsigned int, Race*> Member::Get_Participation() const
 	return Participation;
 }
 
-unsigned int Member::get_membership() const
-{
-	return Membership;
-}
-
 const unsigned int Member::get_id() const
 {
 	return Id;
+}
+
+const string Member::get_name() const
+{
+	return Name;
+}
+
+unsigned int Member::get_membership() const
+{
+	return Membership;
 }
 
 bool Member::empty() const

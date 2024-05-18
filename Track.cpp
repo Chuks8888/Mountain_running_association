@@ -1,7 +1,6 @@
 # include "Track.h"
 # include "Member.h"
 # include "Race.h"
-unsigned int Track::Ids = 0;
 
 Track::Track(string name, Mountain mountain, int length, unsigned int difficulty)
 {

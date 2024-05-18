@@ -4,7 +4,7 @@
 #include "League.h"
 #include <string>
 
-Race::Race(string name, Track *where, League *which_League = nullptr): Name(name), Where(where), Which_League(which_League)
+Race::Race(string name, Track *where, League *which_League): Name(name), Where(where), Which_League(which_League)
 {
    Id = Ids;
    Ids++;
@@ -253,8 +253,7 @@ void Race::Assign_places()
     string input;
     char *end;
     double temp;
-
-    vector<double>::const_iterator time = race_participants.Times.begin();
+    // Input of times of runners
     for(const auto& participant : race_participants.Runners)
     {
         cout << participant.second->get_name() << " " << participant.first << ": ";
@@ -266,12 +265,10 @@ void Race::Assign_places()
         } while (*end == 0 && temp > 0);
         
         race_participants.Times.push_back(temp);
-
-        time++;
     }
 
     vector<pair<double, unsigned int>> sorted_times;
-
+    // Sorting of times in ascending order
     vector<double>::const_iterator time = race_participants.Times.begin();
     for(const auto& participant : race_participants.Runners)
     {
@@ -279,4 +276,38 @@ void Race::Assign_places()
         time++;
     }
     sort(sorted_times.begin(), sorted_times.end());
+    
+    // Assigning places
+    for(const auto& participant : race_participants.Runners)
+    {
+        int i = race_participants.Number_of_runners - 1;
+        for(i; i >= 0; i--)
+        {
+            if(sorted_times[i].second == participant.first)
+            {
+                race_participants.Places.push_back(i + 1);
+                break;
+            }
+        }
+    }
+}
+
+void Race::Declare_winner()
+{
+    // check if the race is finished
+    if(!finished) return;
+
+    vector<unsigned int>::const_iterator place = race_participants.Places.begin();
+    vector<double>::const_iterator time = race_participants.Times.begin();
+    for(const auto& participant : race_participants.Runners)
+    {
+        if(*place == 1)
+        {
+            race_participants.Winner = participant.second;
+            race_participants.Winner_time = *time;
+            break;
+        }
+        place++;
+        time++;
+    }
 }

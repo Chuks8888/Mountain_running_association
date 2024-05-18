@@ -37,7 +37,7 @@ class Member
 		//	Adds/Removes a Race object pointer to/from the 
 		//	Participation parameter, which is a map of Race 
 		//	object pointers where the key is the id of the race
-        void Add_race(const Race&);
+        void Add_race(Race&);
         void Remove_race(Race&);
 		void Remove_race(const unsigned int);
 
