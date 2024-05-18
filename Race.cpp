@@ -80,6 +80,12 @@ void Race::Print() const
 
 void Race::Finish_race()
 {
+    if(Which_League->Get_status() == 0)
+    {
+        cout << "The league is not started" << endl;
+        return;
+    }
+
     if(!race_participants.Number_of_runners == 0)
     {
         Assign_places();

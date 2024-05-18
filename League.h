@@ -27,7 +27,7 @@ class League
 
 		// Ads a runner to the League, and assigns him/her 
 		// to all the races that are defined in the League class
-        void Add_runner(const Member&);
+        void Add_runner(Member&);
 
 		// Removing a runner acts as removing him from
 		// All the races belonging to the league
@@ -47,6 +47,9 @@ class League
 
 		// gets id of the League
         const unsigned int get_id() const;
+
+		// 0 - still under construction, 1 - in progress, 2 - finished
+		int Get_status() const;
 
 		// temporary get method used for testing
 		const map<unsigned int, Member*> Get_Runners() const;
@@ -83,9 +86,6 @@ class League
         bool In_progress; 
 		//	when its 1 the league is over
         bool finished;
-
-		// 0 - still under construction, 1 - in progress, 2 - finished
-		int Get_status();
 	
 		// declares winner based on average time in all races
         void Declare_winner(); 
