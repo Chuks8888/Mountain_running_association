@@ -36,6 +36,7 @@ Member::~Member()
 		}
 		Participation.clear();
 	}
+	cerr << "Member " << Name << " deleted" << endl;
 }
 
 void Member::Print() const
@@ -58,7 +59,8 @@ void Member::Print() const
 		}
 	}
 	else
-		cout << "Not participated in any races";
+		cout << "Not participated in any races" << endl;
+	cout << endl;
 }
 
 long Member::Calculate_performance()

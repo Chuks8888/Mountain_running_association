@@ -17,6 +17,8 @@ Race::Race(string name, Track *where, League *which_League): Name(name), Where(w
    }
 
    race_participants.Number_of_runners = 0;
+
+   where->Add_race(*this);
 }
 
 Race::Race(Race& race): Name(race.Name), Where(race.Where), Which_League(race.Which_League)
@@ -29,14 +31,15 @@ Race::Race(Race& race): Name(race.Name), Where(race.Where), Which_League(race.Wh
 Race::~Race()
 {
     clear();
+    cerr << "Race " << Name << " deleted" << endl;
 }
 
 void Race::Print() const
 {   
-    cout << "Race: " << Name << "Id: " << get_id() << endl;
-    cout << "Track: " << Where->Get_Name() << "Id: " << Where->get_id() << endl;
+    cout << "Race name: " << Name << endl << "Race Id: " << get_id() << endl;
+    cout << "Track name: " << Where->Get_Name() << endl << "Track Id: " << Where->get_id() << endl;
     if(Which_League!= nullptr)
-        cout << "League: " << Which_League->Get_Name() << "Id: " << Which_League->get_id() << endl;
+        cout << "League: " << Which_League->Get_Name() << " Id: " << Which_League->get_id() << endl;
     cout << endl;
 
     cout << "Status of the race: " << (finished? "finished" : "not finished") << endl;
@@ -45,8 +48,8 @@ void Race::Print() const
     {
         cout << "Winner: ";
         cout << Get_winner()->get_name();
-        cout << "Id: " << Get_winner()->get_id() << endl;
-        cout << "Time: " << Get_Winner_time() << endl;
+        cout << " Id: " << Get_winner()->get_id() << endl;
+        cout << "Winner time: " << Get_Winner_time() << endl << endl;
     }
         
 
@@ -56,7 +59,7 @@ void Race::Print() const
         for(const auto& participant : race_participants.Runners)
         {
             cout << "Name: " << participant.second->get_name();
-            cout << "Id: " << participant.second->get_id() << endl;
+            cout << " Id: " << participant.second->get_id() << endl;
         }
     }
     else
@@ -66,9 +69,9 @@ void Race::Print() const
         for(const auto& participant : race_participants.Runners)
         {
             cout << "Name: " << participant.second->get_name();
-            cout << "Id: " << participant.second->get_id() << endl;
+            cout << " Id: " << participant.second->get_id() << endl;
             cout << "Time: " << *time << endl;
-            cout << "Place: " << *places << endl;
+            cout << "Place: " << *places << endl << endl;
             time++;
             places++;
         }
@@ -83,8 +86,13 @@ void Race::Finish_race()
         Declare_winner();
         Calculate_average_time();
 
-        Where->Finish_race(Id);
         finished = true;
+        Where->Finish_race(Id);
+
+        for(const auto& participant : race_participants.Runners)
+            participant.second->Calculate_performance();
+
+        cerr << "Race finished" << endl << endl;
     }
     else
         cout << "There are no participants in the race" << endl;
@@ -106,7 +114,7 @@ double Race::Get_time(unsigned int id) const
     if(!finished) return -1;
 
     auto const& participant = race_participants.Runners.find(id);
-    if(participant->first != id)
+    if(participant->first == id)
     {
         int i=0;
         for(map<unsigned int, Member*>::const_iterator temp = race_participants.Runners.begin(); temp != participant; temp++)
@@ -129,10 +137,11 @@ void Race::Add_runner(Member& participant)
     // check if the race is finished
     if(!finished)
     {
-        if(race_participants.Runners.find(participant.get_id())->second == &participant)
+        if(race_participants.Runners.find(participant.get_id())->second != &participant)
         {
             race_participants.Runners.insert({participant.get_id(), &participant});
             participant.Add_race(*this);
+            race_participants.Number_of_runners++;
         }
         else cout << "This participant is already in the race" << endl;
     }
@@ -163,6 +172,8 @@ void Race::Remove_runner(const unsigned int id)
             }
             race_participants.Times.erase(time);
             race_participants.Places.erase(place);
+
+            race_participants.Number_of_runners--;
 
             if(race_participants.Winner == participant->second)
                 Declare_winner();
@@ -262,7 +273,7 @@ void Race::Assign_places()
             cin >> input;
             temp = strtod(input.c_str(), &end);
 
-        } while (*end == 0 && temp > 0);
+        } while (temp <= 0);
         
         race_participants.Times.push_back(temp);
     }
@@ -294,9 +305,6 @@ void Race::Assign_places()
 
 void Race::Declare_winner()
 {
-    // check if the race is finished
-    if(!finished) return;
-
     vector<unsigned int>::const_iterator place = race_participants.Places.begin();
     vector<double>::const_iterator time = race_participants.Times.begin();
     for(const auto& participant : race_participants.Runners)

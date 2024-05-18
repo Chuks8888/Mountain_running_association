@@ -10,6 +10,7 @@ Track::Track(string name, Mountain mountain, int length, unsigned int difficulty
 
 	Name = name;
 	Where = &mountain;
+	mountain.mountains_tracks.insert({Id, this});
 	Difficulty = difficulty;
 	Length = length;
 
@@ -19,6 +20,21 @@ Track::Track(string name, Mountain mountain, int length, unsigned int difficulty
 	// Fix this issue, because when best time is 0 then we cannot
 	// assign any members to the Best_time.runner
 	Best_time.time = 0.0;
+}
+
+Track::~Track()
+{
+	while(!Data.empty())
+	{
+		Race *temp = Data.begin()->second;
+		Data.erase(Data.begin());
+		delete temp;
+	}
+
+	Where->mountains_tracks.erase(Id);
+	Where = nullptr;
+
+	cerr << "Track " << Name << " deleted" << endl;
 }
 
  void Track::Print() const 
@@ -73,7 +89,7 @@ void Track::Add_race(Race& race)
 {
 	// Inserts the Race* into the Data parameter
 	// map<unsigned int (ID of race), Race*> Data;
-	if(Data.find(race.get_id())!= Data.end())
+	if(race.get_id() != Data.find(race.get_id())->first)
 		Data.insert({race.get_id(), &race});
 	else
 	    cout << "Race with ID " << race.get_id() << " already exists." << endl;
@@ -82,10 +98,10 @@ void Track::Add_race(Race& race)
 
 void Track::Finish_race(unsigned int raceId)
 {
-	const auto& i = Data.find(raceId);
+	map<unsigned int, Race*>::const_iterator i = Data.find(raceId);
 	if(raceId == i->first)
 	{
-		if(!i->second->Is_finished() && i->second->Get_winner() != nullptr)
+		if((i->second->Is_finished()) && (i->second->Get_winner() != nullptr))
 		{
 			// Checks if the winner of the race has the best time
 			Compare_best(const_cast<Member*>(i->second->Get_winner()), i->second->Get_Winner_time());
@@ -132,6 +148,12 @@ unsigned int Track::operator--()
 
 Member* Track::search_for_best()
 {
+	if(Data.empty())
+	{
+		Best_time.runner = nullptr;
+		return nullptr;
+	}
+
 	Best_time.time = Average_time;
 	for(const auto& race : Data)
 	{
@@ -166,7 +188,7 @@ void Track::Remove_race(Race& race)
 void Track::Remove_race(const unsigned int id)
 {
 	Race* temp = Data.find(id)->second;
-	if(temp->get_id() == id)
+	if(temp && temp->get_id() == id)
 	{
 		// Erasing the race object form the Data of the track
 		Data.erase(id);

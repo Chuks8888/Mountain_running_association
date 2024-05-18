@@ -18,6 +18,7 @@ class Track
 		//	If we were to remove a Track
 		//	that had like 10 Races on it already,
 		//	We would then need to remove those 10 races too
+		~Track();
 
 		// Display information about the track
         void Print() const; 
