@@ -38,7 +38,8 @@ class Member
 		//	Participation parameter, which is a map of Race 
 		//	object pointers where the key is the id of the race
         void Add_race(const Race&);
-        void Remove_race(Race&); 
+        void Remove_race(Race&);
+		void Remove_race(const unsigned int);
 
 		//	Find the race if the Member took part in it
 		//	either do it by id of race or its object
@@ -76,9 +77,6 @@ class Member
 		//	the Member took part int, with
 		//	key being the id of the race.
         map<unsigned int, Race*> Participation;
-
-		// Removing race
-		void Remove_race(const unsigned int);
 
 		//	gets Membership parameter
         unsigned int get_membership() const;

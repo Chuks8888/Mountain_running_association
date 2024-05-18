@@ -23,7 +23,7 @@ class League
 
 		// Removing a Race is the same as just using the Race
 		// deconstructor
-        void Remove_Race(Race&); void Remove_Race(const unsigned int);
+        void Remove_race(Race&); void Remove_race(const unsigned int);
 
 		// Ads a runner to the League, and assigns him/her 
 		// to all the races that are defined in the League class

@@ -14,7 +14,7 @@ Member::Member(string name, int age, const char gender, int membership): Name(na
 	Performance_index = 0.0;
 }
 
-Member::Member(const Member& member)
+Member::Member(Member& member)
 {
 	Id = member.Id;
 	if (member.Ids > Ids)
@@ -139,7 +139,7 @@ void Member::Add_race(const Race &race1)
 
 void Member::Remove_race(Race& race)
 {
-	race.Remove_runner(*this);
+	race.Remove_runner(this->Id);
 	Remove_race(race.get_id());
 } 
 
@@ -149,7 +149,7 @@ void Member::Remove_race(const unsigned int id)
 	{
 		const auto& i = Participation.find(id);
 		if(i->first == id)
-			i->second->Remove_runner(*this);
+			Participation.erase(id);
 		else
 			cerr<<"race not found";
 	}

@@ -38,8 +38,8 @@ class Race
 
 		// Adds/Removes a runner to the Race, and ads/removes Race pointer
 		// to The Member's Participation map
-        void Add_runner(const Member&);
-        void Remove_runner(const Member&);
+        void Add_runner(Member&);
+        void Remove_runner(Member&);
         void Remove_runner(const unsigned int);
 
 		// Used to get the pointer to the Track object
@@ -105,7 +105,7 @@ class Race
 		// reaassigns the track
 		// Therefore removing the Race pointer from
 		// the Track "Data" map
-        void operator=(const Track&);
+        void operator=(Track&);
 
 		// Removes all runners from the race and removes other pointers
 		// only used during the deconstruction
