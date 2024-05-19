@@ -220,8 +220,7 @@ void Race::Remove_runner(const unsigned int id)
 
     if((finished) && (race_participants.Number_of_runners == 0))
     {
-        cout << "The race is finished and has no participants, hence its going to be deleted" << endl;
-        delete this;
+        finished = false;
     }
 }
 
@@ -286,7 +285,6 @@ void Race::clear()
     if(Which_League!= nullptr)
     {
         Which_League->Remove_race(Id);
-        Which_League = nullptr;
     }
 }
 
@@ -348,6 +346,10 @@ void Race::Assign_places()
 
 void Race::Declare_winner()
 {
+    if(race_participants.Number_of_runners == 0)
+    {
+        race_participants.Winner = nullptr;
+    }
     vector<unsigned int>::const_iterator place = race_participants.Places.begin();
     vector<double>::const_iterator time = race_participants.Times.begin();
     for(const auto& participant : race_participants.Runners)

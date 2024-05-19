@@ -68,12 +68,36 @@ void MemberTest()
     // end of test of destructors
 
     // Race functions in Member class
+
     Emily.Add_race(Relay); // This should not work
     if(Emily.Get_Participation().size() != 0)
     {
         cout << "The race was added despite limitations of the method";
         exit(1);
     }
+
+    Relay.Add_runner(Emily);
+
+    if(!Emily.Find_race(Relay))
+    {
+        cout << "The race was not found";
+        exit(1);
+    }
+
+    Emily.Remove_race(Relay);
+
+    if(Emily.Get_Participation().size() != 0)
+    {
+        cout << "The race was not removed";
+        exit(1);
+    }
+
+    if(Relay.Get_Participants().find(Emily.get_id())->first == Emily.get_id())
+    {
+        "Emily was not removed from the race";
+    }
+
+    cout << "All tests completed";
 
 }
 

@@ -31,6 +31,8 @@ Track::~Track()
 		delete temp;
 	}
 
+	Best_time.runner = nullptr;
+
 	Where->mountains_tracks.erase(Id);
 	Where = nullptr;
 

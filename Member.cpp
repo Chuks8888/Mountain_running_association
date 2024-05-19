@@ -130,7 +130,6 @@ void Member::Add_race(Race &race1)
 {
 	if(!race1.Find_runner(Id))
 	{
-		cerr << "The member is not in the race" << endl;
 		return;
 	}
 

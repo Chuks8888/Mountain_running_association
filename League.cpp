@@ -62,18 +62,19 @@ void League::Remove_race(Race& race)
 
 void League::Remove_race(const unsigned int id)
 {
-    // Calling with id means we dont want to remove
-    // the whole race object, but just the runners
-    // and the league
     const auto& race = League_Races.find(id);
     if(race->first == id)
     {
         Track *temp = race->second->Where;
+        race->second->Which_League = nullptr;
         race->second->clear();
         race->second->Where = temp;
         League_Races.erase(id);
 
         number_of_races--;
+
+        if(finished)
+            Declare_winner();
     }
     else cout << "Race not found" << endl;
 }
@@ -199,6 +200,12 @@ const map<unsigned int, Race*> League::Get_Races() const
 
 void League::Declare_winner()
 {
+    if(number_of_races == 0)
+    {
+        Winner = nullptr;
+        return;
+    }
+
     vector<pair<double, unsigned int>> Times;
 
     for(const auto& runner : League_Runners)

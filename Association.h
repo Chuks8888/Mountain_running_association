@@ -21,7 +21,7 @@ class Association
 
     public:
 		//	Constructor of mountain running associaition all we need is a name.
-        Association(string Name);
+        Association(string name);
 
 		//	When the deconstructor is invoked all the information
 		//	of the class is going to be stored to a txt file
