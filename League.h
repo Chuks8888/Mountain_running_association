@@ -31,7 +31,10 @@ class League
 
 		// Removing a runner acts as removing him from
 		// All the races belonging to the league
-        void Remove_runner(const Member&); void Remove_runner(const unsigned int);
+        void Remove_runner(Member&); void Remove_runner(const unsigned int);
+
+		// Finds if a runner is in the League
+		bool find_runner(const unsigned int) const;
 
 		// stops from edditing the league
         void Start_League();

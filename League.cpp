@@ -32,11 +32,20 @@ void League::Add_Race(Race& race)
         return;
     }
 
+    if(number_of_races == 5)
+    {
+        cout << "Maximum number of races reached" << endl;
+        return;
+    }
+
     if(race.race_participants.Number_of_runners == 0)
     {
         League_Races.insert({race.get_id(), &race});
         for(auto& participant : League_Runners)
             race.Add_runner(*participant.second);
+        
+        race.Which_League = this;
+        number_of_races++;
     }
     else
         cout << "Race already has runners" << endl;
@@ -63,6 +72,8 @@ void League::Remove_race(const unsigned int id)
         race->second->clear();
         race->second->Where = temp;
         League_Races.erase(id);
+
+        number_of_races--;
     }
     else cout << "Race not found" << endl;
 }
@@ -80,6 +91,81 @@ void League::Add_runner(Member& runner)
     else cout << "League is in progress" << endl;
 }
 
+void League::Remove_runner(Member& runner)
+{
+    if(&runner == League_Runners.find(runner.get_id())->second)
+    {
+        League_Runners.erase(runner.get_id());
+        for(auto& race : League_Races)
+        {
+            race.second->Remove_runner(runner);
+        }
+
+        if(finished)
+            Declare_winner();
+    }
+}
+
+void League::Remove_runner(const unsigned int id)
+{
+    if(id == League_Runners.find(id)->first)
+    {
+        League_Runners.erase(id);
+        for(auto& race : League_Races)
+        {
+            race.second->Remove_runner(id);
+        }
+
+        if(finished)
+            Declare_winner();
+    }
+}
+
+bool League::find_runner(const unsigned int id) const
+{
+    if(League_Runners.find(id)->first == id)
+        return true;
+    
+    return false;
+}
+
+void League::Start_League()
+{
+    In_progress = 1;
+}
+
+void League::Next_stage()
+{
+    if(!In_progress)
+    {
+        cout << "League has not started" << endl;
+        return;
+    }
+
+    if(finished)
+    {
+        cout << "League already finished" << endl;
+        return;
+    }
+
+    for(auto& race : League_Races)
+    {
+        if(!race.second->Is_finished())
+        {
+            race.second->Finish_race();
+            cout << "Race " << race.second->get_name() << " " <<race.second->get_id() << " finished" << endl;
+            return;
+        }
+    }
+    finished = true;
+    Declare_winner();
+}
+
+const Member* League::Get_winner() const
+{
+    return Winner;
+}
+
 string League::Get_Name() const
 {
     return Name;
@@ -88,4 +174,46 @@ string League::Get_Name() const
 const unsigned int League::get_id() const
 {
     return Id;
+}
+
+int League::Get_status() const
+{
+    if(finished)
+        return 2;
+    else 
+        if(In_progress)
+            return 1;
+    else 
+        return 0;
+}
+
+const map<unsigned int, Member*> League::Get_Runners() const
+{
+    return League_Runners;
+}
+
+const map<unsigned int, Race*> League::Get_Races() const
+{
+    return League_Races;
+}
+
+void League::Declare_winner()
+{
+    vector<pair<double, unsigned int>> Times;
+
+    for(const auto& runner : League_Runners)
+        Times.push_back({0.0, runner.first});
+
+    for(const auto& race : League_Races)
+    {
+        for(int i = 0; i < League_Runners.size(); i++)
+        {
+            Times[i].first += race.second->race_participants.Times[i];
+        }
+    }
+
+    sort(Times.begin(), Times.end());
+
+    Winner = League_Runners.find(Times[0].second)->second;
+    cout << "Winner is " << Winner->get_name() << " with time " << Times[0].first << endl;
 }

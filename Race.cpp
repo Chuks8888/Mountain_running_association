@@ -140,6 +140,15 @@ const Member* Race::Get_winner() const
 
 void Race::Add_runner(Member& participant)
 {
+    // check if the participant is in the league
+    if(Which_League != nullptr)
+    {
+        if(!Which_League->find_runner(participant.get_id()))
+        {
+            cout << "The member is not a part of this league";
+            return;
+        }
+    }
     // check if the race is finished
     if(!finished)
     {
@@ -157,13 +166,34 @@ void Race::Add_runner(Member& participant)
 
 void Race::Remove_runner(Member& participant)
 {
+    if(Which_League != nullptr)
+    {
+        if(Which_League->find_runner(participant.get_id()))
+        {
+            Which_League->Remove_runner(participant);
+            return;
+        }
+    }
     participant.Remove_race(this->Id);
     Remove_runner(participant.get_id());
 }
 
 void Race::Remove_runner(const unsigned int id)
 {
-    auto const& participant = race_participants.Runners.find(id);
+    const auto& participant = race_participants.Runners.find(id);
+
+    // remove the participant from all league races
+    if(Which_League != nullptr)
+    {
+        if(Which_League->find_runner(id))
+        {
+            Which_League->Remove_runner(id);
+            return;
+        }
+        if(participant->first != id)
+            return;
+    }  
+
     if(participant->first == id)
     {
         if(finished)
@@ -193,6 +223,13 @@ void Race::Remove_runner(const unsigned int id)
         cout << "The race is finished and has no participants, hence its going to be deleted" << endl;
         delete this;
     }
+}
+
+bool Race::Find_runner(const unsigned int id)
+{
+    if(race_participants.Runners.find(id)->first == id)
+        return true;
+    return false;
 }
 
 const Track* Race::Get_Where() const

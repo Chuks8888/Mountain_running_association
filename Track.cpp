@@ -11,7 +11,7 @@ Track::Track(string name, Mountain mountain, int length, unsigned int difficulty
 	Name = name;
 	Where = &mountain;
 	mountain.mountains_tracks.insert({Id, this});
-	Difficulty = difficulty;
+	Difficulty = difficulty & 10;
 	Length = length;
 
 	Average_time = 0.0;

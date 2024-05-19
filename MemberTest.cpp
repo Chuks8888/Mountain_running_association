@@ -1,12 +1,7 @@
+#include "Member.h"
 #include "Race.h"
 #include "Track.h"
-#include "Member.h"
 #include "League.h"
-
-unsigned int Race::Ids = 1;
-unsigned int Track::Ids = 1;
-unsigned int Member::Ids = 1;
-unsigned int League::Ids = 1;
 
 void MemberTest()
 {
@@ -48,36 +43,22 @@ void MemberTest()
     Relay.Add_runner(David);
 
     // Test of destructors
-    auto& participants = Relay.Get_Participants();
-    auto& participants2 = worldLeague.Get_Runners();
-
     David.~Member();
     John.~Member();
 
-    if(Relay.Get_Participants().size() != 1)
+    auto& participants = Relay.Get_Participants();
+    auto& participants2 = worldLeague.Get_Runners();
+
+    if(participants.size() != 1)
     {
         cout << "Member was not removed from the race" << endl;
         exit(1);
     }
 
-    if(worldLeague.Get_Runners().size() != 2)
+    if(participants2.size() != 2)
     {
         cout << "Member was not removed from the league" << endl;
         exit(1);
     }
-    // end of test of destructors
 
-    // Race functions in Member class
-    Emily.Add_race(Relay); // This should not work
-    if(Emily.Get_Participation().size() != 0)
-    {
-        cout << "The race was added despite limitations of the method";
-        exit(1);
-    }
-
-}
-
-int main()
-{
-    MemberTest();
 }

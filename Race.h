@@ -41,6 +41,7 @@ class Race
         void Add_runner(Member&);
         void Remove_runner(Member&);
         void Remove_runner(const unsigned int);
+		bool Find_runner(const unsigned int);
 
 		// Used to get the pointer to the Track object
 		const Track* Get_Where() const;
