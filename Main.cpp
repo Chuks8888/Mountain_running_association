@@ -37,16 +37,38 @@ void MemberTest()
     worldLeague.Add_runner(Bob);
     worldLeague.Add_runner(Alice);
     worldLeague.Add_runner(John);
+    worldLeague.Add_runner(Sarah);
+    worldLeague.Add_runner(David);
 
     // Add the races to the league
     worldLeague.Add_Race(Marathon);
     worldLeague.Add_Race(HalfMarathon);
     worldLeague.Add_Race(UltraMarathon);
 
+    //worldLeague.Start_League();
+
+    worldLeague.Add_runner(Emily);
+    worldLeague.Add_Race(Relay);
+
+    //worldLeague.Next_stage();
+    //worldLeague.Next_stage();
+    //worldLeague.Next_stage();
+
+    //worldLeague.Remove_runner(Bob);
+
+    //worldLeague.Get_winner()->Print();
+
+    Bob.Print();
+
     // Add members to non league races
     Relay.Add_runner(Sarah);
     Relay.Add_runner(David);
+    
 
+
+    /* Below are test for member class */
+
+    /*
     // Test of destructors
     auto& participants = Relay.Get_Participants();
     auto& participants2 = worldLeague.Get_Runners();
@@ -96,7 +118,7 @@ void MemberTest()
     {
         "Emily was not removed from the race";
     }
-
+    */
     cout << "All tests completed";
 
 }

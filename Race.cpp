@@ -98,7 +98,7 @@ void Race::Finish_race()
         for(const auto& participant : race_participants.Runners)
             participant.second->Calculate_performance();
 
-        cerr << "Race finished" << endl << endl;
+        cerr << "Race " << Name << " " << Id << " finished" << endl << endl;
     }
     else
         cout << "There are no participants in the race" << endl;

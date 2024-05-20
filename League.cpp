@@ -154,7 +154,8 @@ void League::Next_stage()
         if(!race.second->Is_finished())
         {
             race.second->Finish_race();
-            cout << "Race " << race.second->get_name() << " " <<race.second->get_id() << " finished" << endl;
+            if(race.first == League_Races.end()->first)
+                break;
             return;
         }
     }
@@ -222,5 +223,5 @@ void League::Declare_winner()
     sort(Times.begin(), Times.end());
 
     Winner = League_Runners.find(Times[0].second)->second;
-    cout << "Winner is " << Winner->get_name() << " with time " << Times[0].first << endl;
+    cout << "Winner of the league " << Name << "is " << Winner->get_name() << " with average time " << Times[0].first << endl;
 }

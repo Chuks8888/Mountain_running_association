@@ -48,10 +48,10 @@ class Association
 		//	Those however have limitations, example: if a race has 
 		//	finished we cannot change who participated in the race, 
 		//	unless we want to remove that person from the system as a whole
-        void Edit_Race(unsigned int id);
-        void Edit_League(unsigned int id);
-		void Edit_Member(unsigned int id);
-		void Edit_Track(unsigned int id);
+        int Edit_Race(unsigned int id); // 1
+        int Edit_League(unsigned int id); // 2
+		int Edit_Member(unsigned int id); // 3
+		int Edit_Track(unsigned int id); // 4
 
 		//	Prints the information on the classes the associaition has
         int Print_Unfinished_Races() const; // the int is for number of races 

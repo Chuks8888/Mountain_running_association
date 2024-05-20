@@ -41,6 +41,8 @@ Member::~Member()
 
 void Member::Print() const
 {
+	if(this == nullptr) return;
+
 	cout << "Runner: " << Name << endl;
 	cout << "ID: " << Id << endl;
 	cout << "Membership: " << Membership << endl;
