@@ -28,7 +28,7 @@ void MemberTest()
 
 	// those need to be made with new so that the program
 	// does not try to delete the object twice
-    Race Marathon("Marathon", &White);
+    Race *Marathon = new Race("Marathon", &White);
     Race HalfMarathon("Half Marathon", &Black);
     Race UltraMarathon("Ultra Marathon", &Blue);
     Race Relay("Relay", &White);
@@ -43,15 +43,15 @@ void MemberTest()
 	//worldLeague.Add_runner(David);
 
 	 //Add the races to the league
-	worldLeague.Add_Race(Marathon);
+	worldLeague.Add_Race(*Marathon);
 	//worldLeague.Add_Race(HalfMarathon);
 	//worldLeague.Add_Race(UltraMarathon);
 
-    //worldLeague.Start_League();
+	//worldLeague.Start_League();
 
     //worldLeague.Add_runner(Emily);
 
-    //worldLeague.Next_stage();
+	//worldLeague.Next_stage();
     //worldLeague.Next_stage();
     //worldLeague.Next_stage();
 
@@ -123,6 +123,8 @@ void MemberTest()
     //cerr << "All tests completed";
 
 	//worldLeague.~League();
+
+	//Sarah.Print();
 
 }
 

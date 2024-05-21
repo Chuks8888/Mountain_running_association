@@ -22,13 +22,6 @@ Race::Race(string name, Track *where, League *which_League): Name(name), Where(w
    where->Add_race(*this);
 }
 
-Race::Race(Race& race): Name(race.Name), Where(race.Where), Which_League(race.Which_League)
-{
-    Id = race.Id;
-    finished = race.finished;
-    race_participants = race.race_participants;
-}
-
 Race::~Race()
 {
     clear();
@@ -273,20 +266,23 @@ void Race::operator=(Track& track)
 
 void Race::clear()
 {
-    for(auto& participant : race_participants.Runners)
-    {
-        participant.second->Remove_race(Id);
-    }
-    race_participants.Runners.clear();
-    race_participants.Winner = nullptr;
-
-    Where->Remove_race(Id);
-    Where = nullptr;
 
     if(Which_League!= nullptr)
     {
         Which_League->Remove_race(Id);
     }
+	else
+	{
+		for(auto& participant : race_participants.Runners)
+		{
+			participant.second->Remove_race(Id);
+		}
+		race_participants.Runners.clear();
+		race_participants.Winner = nullptr;
+
+		Where->Remove_race(Id);
+		Where = nullptr;
+	}
 }
 
 void Race::Calculate_average_time()

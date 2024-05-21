@@ -72,7 +72,6 @@ void League::Remove_race(const unsigned int id)
         Track *temp = race->second->Where;
         race->second->Which_League = nullptr;
         race->second->clear();
-        race->second->Where = temp;
         League_Races.erase(id);
 
         number_of_races--;
