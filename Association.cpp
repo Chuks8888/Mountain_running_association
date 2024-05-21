@@ -329,6 +329,85 @@ int Association::Edit_Race(unsigned int id)
     }
 }
 
+int Association::Print_Unfinished_Races() const
+{
+    for(const auto &race : races)
+    {
+        if(!race.second->finished)
+        {
+            cout << race.second->Name << " Id: " << race.second->Id << endl;
+        }
+    }
+}
+
+int Association::Print_Finished_Races() const
+{
+    for(const auto &race : races)
+    {
+        if(race.second->finished)
+        {
+            cout << race.second->Name << " Id: " << race.second->Id << endl;
+        }
+    }
+}
+
+int Association::Print_All_Races() const
+{
+    for(const auto &race : races)
+    {
+        cout << race.second->Name << " Id: " << race.second->Id << endl;
+    }
+}
+
+void Association::Print_Members() const
+{
+    for(const auto &member : members)
+    {
+        cout << member.second->Name << " Id: " << member.second->Id << endl;
+    }
+}
+
+void Association::Print_Tracks() const
+{
+    for(const auto &track : tracks)
+    {
+        cout << track.second->Name << " Id: " << track.second->Id << endl;
+    }
+}
+
+void Association::Print_Leagues() const
+{
+    for(const auto &league : leagues)
+    {
+        cout << league.second->Name << " Id: " << league.second->Id << endl;
+        cout << "Reward: " << league.second->Reward << endl;
+        for(const auto &race: league.second->League_Races)
+        {
+            cout << race.second->Name << " Id: " << race.second->Id << endl;
+        }
+        cout << "Runners: " << endl;
+        for(const auto &member: league.second->League_Runners)
+        {
+            cout << member.second->Name << " Id: " << member.second->Id << endl;
+        }
+    }
+}
+
+void Association::Print_Mountains() const
+{
+    cout << "Mountains: " << endl;
+    for(const auto &mountain : mountains)
+    {
+        cout << "Name: " << mountain->Name;
+        cout << "Place: " << mountain->Country;
+        cout << "Height: " << mountain->Height << endl;
+        for(const auto &track : mountain->mountains_tracks)
+        {
+            cout << "Track: " << track.second->Name << " Id: " << track.second->Id << endl;
+        }
+    }
+}
+
 map<unsigned int, Member*> Association::Get_member_map() const
 {
     return members;

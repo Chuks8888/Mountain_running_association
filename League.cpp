@@ -74,6 +74,13 @@ void League::Remove_race(const unsigned int id)
 
         number_of_races--;
 
+        if(number_of_races == 0)
+        {
+            League_Races.clear();
+            finished = false;
+            return;
+        }
+
         if(finished)
             Declare_winner();
     }
@@ -84,6 +91,12 @@ void League::Add_runner(Member& runner)
 {
     if(In_progress == 0)
     {
+        if(number_of_races == 0)
+        {
+            cout << "No races in the league" << endl;
+            return;
+        }
+
         League_Runners.insert({runner.get_id(), &runner});
         for(auto& race : League_Races)
         {
