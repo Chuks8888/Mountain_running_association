@@ -22,18 +22,12 @@ Track::Track(string name, Mountain mountain, int length, unsigned int difficulty
 	Best_time.time = 0.0;
 }
 
-Track::Track(Track &track) : Id(track.Id), Name(track.Name)
-{
-	
-}
-
 Track::~Track()
 {
 	while(!Data.empty())
 	{
 		Race *temp = Data.begin()->second;
 		delete temp;
-		Data.erase(Data.begin());
 	}
 
 	Best_time.runner = nullptr;

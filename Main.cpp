@@ -42,8 +42,8 @@ void MemberTest()
 	//worldLeague.Add_runner(Sarah);
 	//worldLeague.Add_runner(David);
 
-	 //Add the races to the league
-	worldLeague.Add_Race(*Marathon);
+	//Add the races to the league
+	//worldLeague.Add_Race(*Marathon);
 	//worldLeague.Add_Race(HalfMarathon);
 	//worldLeague.Add_Race(UltraMarathon);
 
@@ -124,11 +124,14 @@ void MemberTest()
 
 	//worldLeague.~League();
 
+    //White.~Track();
+
 	//Sarah.Print();
 
 }
 
 int main()
 {
-    MemberTest();
+    //MemberTest();
+    Association("Levis");
 }

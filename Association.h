@@ -74,6 +74,8 @@ class Association
 		//	Name of the associaition
 		string Name;
 
+		unsigned int chosen_id;
+
 		//	The main class has a map of all the objects added to it
 		//	all elements of the map are pointers with keys being the ids
 		//	of the objects, so when adding objects manually we

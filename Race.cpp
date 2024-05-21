@@ -82,6 +82,7 @@ void Race::Finish_race()
 
     if(race_participants.Number_of_runners != 0)
     {
+        Input_times();
         Assign_places();
         Declare_winner();
         Calculate_average_time();
@@ -153,6 +154,7 @@ void Race::Add_runner(Member& participant)
             race_participants.Runners.insert({participant.get_id(), &participant});
             participant.Add_race(*this);
             race_participants.Number_of_runners++;
+            cout << participant.get_name() << " added to the race" << endl;
         }
         else cout << "This participant is already in the race" << endl;
     }
@@ -208,11 +210,13 @@ void Race::Remove_runner(const unsigned int id)
             race_participants.Number_of_runners--;
 
             if(race_participants.Winner == participant->second)
+            {
+                Assign_places();
                 Declare_winner();
+            }
         }
         race_participants.Runners.erase(id);
     }
-    else cout << "There is no participant with such id" << endl;
 
     if((finished) && (race_participants.Number_of_runners == 0))
     {
@@ -270,6 +274,7 @@ void Race::clear()
     if(Which_League!= nullptr)
     {
         Which_League->Remove_race(Id);
+        return;
     }
 	else
 	{
@@ -295,7 +300,7 @@ void Race::Calculate_average_time()
     race_participants.Average_time = sum / race_participants.Number_of_runners;
 }
 
-void Race::Assign_places()
+void Race::Input_times()
 {
     cout << "Input times: " << endl;
 
@@ -315,7 +320,10 @@ void Race::Assign_places()
         
         race_participants.Times.push_back(temp);
     }
+}
 
+void Race::Assign_places()
+{
     vector<pair<double, unsigned int>> sorted_times;
     // Sorting of times in ascending order
     vector<double>::const_iterator time = race_participants.Times.begin();

@@ -113,7 +113,8 @@ class Race
 		void clear();
 
 		//	Methods that are called after the race has finished
-        void Calculate_average_time(); 
+        void Calculate_average_time();
+		void Input_times(); 
 		void Assign_places(); 
         void Declare_winner();
 		

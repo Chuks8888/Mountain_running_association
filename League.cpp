@@ -59,8 +59,7 @@ void League::Remove_race(Race& race)
 {
     if(&race == League_Races.find(race.get_id())->second)
     {
-        Remove_race(race.get_id());
-        race.~Race();
+        delete &race;
     }
 }
 
@@ -69,7 +68,6 @@ void League::Remove_race(const unsigned int id)
     const auto& race = League_Races.find(id);
     if(race->first == id)
     {
-        Track *temp = race->second->Where;
         race->second->Which_League = nullptr;
         race->second->clear();
         League_Races.erase(id);
