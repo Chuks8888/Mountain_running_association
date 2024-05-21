@@ -14,10 +14,7 @@ Member::Member(string name, int age, const char gender, int membership): Name(na
 
 Member::Member(Member& member)
 {
-	Id = member.Id;
-	if (member.Ids > Ids)
-		Ids = member.Ids;
-
+	Id = member.Id;	
 	Name = member.Name;
 	Age = member.Age;
 	Gender = member.Gender;
@@ -28,21 +25,19 @@ Member::Member(Member& member)
 
 Member::~Member()
 {
-	if(!empty())
+	while(!Participation.empty())
 	{
-		for(auto& race: Participation)
+		for(auto& race : Participation)
 		{
-			race.second->Remove_runner(Id);
+			race.second->Remove_runner(*this);
+			break;
 		}
-		Participation.clear();
 	}
 	cerr << "Member " << Name << " deleted" << endl;
 }
 
 void Member::Print() const
 {
-	if(this == nullptr) return;
-
 	cout << "Runner: " << Name << endl;
 	cout << "ID: " << Id << endl;
 	cout << "Membership: " << Membership << endl;

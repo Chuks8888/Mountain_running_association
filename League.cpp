@@ -16,12 +16,16 @@ League::League(string name, string Reward) : Name(name), Reward(Reward)
 
 League::~League()
 {
-    for(auto& race : League_Races)
-    {
-        delete race.second;
-    }
-    League_Races.clear();
+	for(auto& race : League_Races)
+	{
+		Race* temp = race.second;
+		race.second =  nullptr;
+		temp->Which_League =  nullptr;
+		delete temp;
+	}
+	League_Races.clear();
     League_Runners.clear();
+	cerr << "League " << Name << " deleted" << endl;
 }
 
 void League::Add_Race(Race& race)
@@ -94,12 +98,16 @@ void League::Add_runner(Member& runner)
 
 void League::Remove_runner(Member& runner)
 {
-    if(&runner == League_Runners.find(runner.get_id())->second)
+	int i = League_Runners.find(runner.get_id())->first;
+	int j = runner.get_id();
+    if(i == j)
     {
         League_Runners.erase(runner.get_id());
         for(auto& race : League_Races)
         {
+			race.second->Which_League = nullptr;
             race.second->Remove_runner(runner);
+			race.second->Which_League = this;
         }
 
         if(finished)
@@ -109,12 +117,14 @@ void League::Remove_runner(Member& runner)
 
 void League::Remove_runner(const unsigned int id)
 {
-    if(id == League_Runners.find(id)->first)
+    if(id == League_Runners.find(id)->second->get_id())
     {
         League_Runners.erase(id);
         for(auto& race : League_Races)
         {
+			race.second->Which_League = nullptr;
             race.second->Remove_runner(id);
+			race.second->Which_League = this;
         }
 
         if(finished)
@@ -125,7 +135,9 @@ void League::Remove_runner(const unsigned int id)
 bool League::find_runner(const unsigned int id) const
 {
     if(League_Runners.find(id)->first == id)
-        return true;
+	{
+		return true;
+	}
     
     return false;
 }
@@ -183,10 +195,12 @@ int League::Get_status() const
     if(finished)
         return 2;
     else 
+	{
         if(In_progress)
             return 1;
-    else 
-        return 0;
+		else
+			return 0;
+	}
 }
 
 const map<unsigned int, Member*> League::Get_Runners() const

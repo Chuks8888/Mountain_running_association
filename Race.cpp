@@ -17,6 +17,7 @@ Race::Race(string name, Track *where, League *which_League): Name(name), Where(w
    }
 
    race_participants.Number_of_runners = 0;
+   race_participants.Winner =  nullptr;
 
    where->Add_race(*this);
 }
@@ -86,7 +87,7 @@ void Race::Finish_race()
         return;
     }
 
-    if(!race_participants.Number_of_runners == 0)
+    if(race_participants.Number_of_runners != 0)
     {
         Assign_places();
         Declare_winner();
@@ -107,11 +108,13 @@ void Race::Finish_race()
 double Race::Get_Average_time() const
 {
     if(finished) return race_participants.Average_time;
+	return 0.0;
 }
 
 double Race::Get_Winner_time() const
 {
     if(finished) return race_participants.Winner_time;
+	return 0.0;
 }
 
 double Race::Get_time(unsigned int id) const
@@ -135,7 +138,7 @@ double Race::Get_time(unsigned int id) const
 
 const Member* Race::Get_winner() const
 {
-    if(finished) return race_participants.Winner;
+    return race_participants.Winner;
 }
 
 void Race::Add_runner(Member& participant)
@@ -174,7 +177,7 @@ void Race::Remove_runner(Member& participant)
             return;
         }
     }
-    participant.Remove_race(this->Id);
+    participant.Remove_race(Id);
     Remove_runner(participant.get_id());
 }
 
@@ -275,8 +278,6 @@ void Race::clear()
         participant.second->Remove_race(Id);
     }
     race_participants.Runners.clear();
-    race_participants.Times.clear();
-    race_participants.Places.clear();
     race_participants.Winner = nullptr;
 
     Where->Remove_race(Id);

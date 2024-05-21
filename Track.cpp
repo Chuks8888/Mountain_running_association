@@ -129,23 +129,27 @@ double Track::operator-=(double decrease)
 {
 	if(Length > decrease && Length > 0)
 		Length -= decrease;
+	return Length;
 }
 
 double Track::operator+=(double increase)
 {
 	Length += increase;
+	return Length;
 }
 
 unsigned int Track::operator++()
 {
 	if(Difficulty != 10)
 		Difficulty++;
+	return Difficulty;
 }
 
 unsigned int Track::operator--()
 {
 	if(Difficulty != 1)
 		Difficulty--;
+	return Difficulty;
 }
 
 Member* Track::search_for_best()
@@ -202,7 +206,7 @@ void Track::Remove_race(const unsigned int id)
 		// After removing the Race object from the Track object
 		// We check if the best time holder gained that status due
 		// to the now deleted race
-		if(temp->Get_winner() == Best_time.runner && temp->Get_Winner_time() == Best_time.time)
+		if(temp->Get_winner() && (temp->Get_winner() == Best_time.runner && temp->Get_Winner_time() == Best_time.time))
 			search_for_best();
 	}
 }
