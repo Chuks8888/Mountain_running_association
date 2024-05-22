@@ -3,10 +3,10 @@
 #include "Member.h"
 #include "League.h"
 
-unsigned int Race::Ids = 1;
-unsigned int Track::Ids = 1;
-unsigned int Member::Ids = 1;
-unsigned int League::Ids = 1;
+unsigned int Race::Ids = 2;
+unsigned int Track::Ids = 2;
+unsigned int Member::Ids = 2;
+unsigned int League::Ids = 2;
 
 void Tests()
 {
@@ -17,31 +17,33 @@ void Tests()
     Mountain Mount = {"Everest", "Nepal", 8848};
 
     /* Members */
+    Member Emily("Emily", 38, 'F');
     Member Bob("Bob", 32, 'M');
     Member Alice("Alice", 28, 'F');
     Member *John = new Member("John", 45, 'M'); // will be deleted
     Member Sarah("Sarah", 35, 'F');
     Member *David = new Member("David", 25, 'M'); // will be deleted
-    Member Emily("Emily", 38, 'F');
 
     /* Tracks */
     Track Black("Black", Mount, 15, 10);
     Track Blue("Blue", Mount, 10, 7);
     Track White("White", Tatry, 12, 6);
 
-    /* Leagues */
-    League worldLeague("worldLeague", "Trophy");
-
     /* Races */
     Race Relay("Relay", &Blue);
-    Race Marathon("Marathon", &White);
+	Race *Money = new Race("Money", &Black);
+    Race *Marathon = new Race("Marathon", &White);
+
+    /* Leagues */
+    League worldLeague("worldLeague", "Trophy");
 
     // Add members to non league races
     Relay.Add_runner(Bob);
     Relay.Add_runner(*David);
 
     // Add Members to league
-    worldLeague.Add_Race(Marathon);
+    worldLeague.Add_Race(*Marathon);
+	worldLeague.Add_Race(*Money);
     worldLeague.Add_runner(*John);
     worldLeague.Add_runner(Sarah);
     worldLeague.Add_runner(Alice);
@@ -50,7 +52,6 @@ void Tests()
     /* Start of Member tests */
     /*                       */
     auto& participants = Relay.Get_Participants();
-
     delete David;
     delete John;
 
@@ -95,6 +96,7 @@ void Tests()
         cout << "Emily was not removed from the race";
         exit(1);
     }
+	cerr << "End of member tests\n";
     /*                     */
     /* End of Member tests */
     /*                     */

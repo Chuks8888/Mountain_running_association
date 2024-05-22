@@ -24,6 +24,8 @@ Race::Race(string name, Track *where, League *which_League): Name(name), Where(w
 
 Race::~Race()
 {
+	if(!this)
+		return;
     clear();
     cerr << "Race " << Name << " deleted" << endl;
 }
@@ -34,7 +36,6 @@ void Race::Print() const
     cout << "Track name: " << Where->Get_Name() << endl << "Track Id: " << Where->get_id() << endl;
     if(Which_League!= nullptr)
         cout << "League: " << Which_League->Get_Name() << " Id: " << Which_League->get_id() << endl;
-    cout << endl;
 
     cout << "Status of the race: " << (finished? "finished" : "not finished") << endl;
 
@@ -45,7 +46,6 @@ void Race::Print() const
         cout << " Id: " << Get_winner()->get_id() << endl;
         cout << "Winner time: " << Get_Winner_time() << endl << endl;
     }
-        
 
     cout << "Race participants: " << endl;
     if(!finished)

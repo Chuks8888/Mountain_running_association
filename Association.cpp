@@ -331,32 +331,41 @@ int Association::Edit_Race(unsigned int id)
 
 int Association::Print_Unfinished_Races() const
 {
+	int i = 0;
     for(const auto &race : races)
     {
         if(!race.second->finished)
         {
             cout << race.second->Name << " Id: " << race.second->Id << endl;
+			i++;
         }
     }
+	return i;
 }
 
 int Association::Print_Finished_Races() const
 {
+	int i = 0;
     for(const auto &race : races)
     {
         if(race.second->finished)
         {
+			i++;
             cout << race.second->Name << " Id: " << race.second->Id << endl;
         }
     }
+	return i;
 }
 
 int Association::Print_All_Races() const
 {
+	int i = 0;
     for(const auto &race : races)
     {
+		i++;
         cout << race.second->Name << " Id: " << race.second->Id << endl;
     }
+	return i;
 }
 
 void Association::Print_Members() const

@@ -2,7 +2,7 @@
 # include "Member.h"
 # include "Race.h"
 
-Track::Track(string name, Mountain mountain, int length, unsigned int difficulty)
+Track::Track(string name, Mountain &mountain, int length, unsigned int difficulty)
 {
 	// Gives the object its id and increases the number of objects i.e. Ids
 	Id = Ids;
@@ -32,8 +32,8 @@ Track::~Track()
 
 	Best_time.runner = nullptr;
 
-	Where->mountains_tracks.find(Id)->second = nullptr;
-	Where->mountains_tracks.erase(Id);
+	if(Where)
+		Where->mountains_tracks.erase(Id);
 	Where = nullptr;
 
 	cerr << "Track " << Name << " deleted" << endl;
@@ -42,7 +42,7 @@ Track::~Track()
  void Track::Print() const 
 {
     cout << "Track Name: " << Name << endl;
-    cout << "Location: " << Where->Name << endl;
+    cerr << "Location: " << Where->Name << endl;
     cout << "Difficulty: " << Difficulty << "/10" << endl;
     cout << "Length: " << Length << " kilometers" << endl;
     
@@ -54,7 +54,7 @@ Track::~Track()
         for (const auto& pair : Data) 
 		{
             cout << "Race ID: " << pair.first << endl;
-            cout << "Name: " << pair.second->get_name() << endl << endl; 
+            cout << "Name: " << pair.second->get_name() << endl; 
         }
 	} else cout << "No races held on this track yet." << endl;
 
@@ -92,7 +92,9 @@ void Track::Add_race(Race& race)
 	// Inserts the Race* into the Data parameter
 	// map<unsigned int (ID of race), Race*> Data;
 	if(race.get_id() != Data.find(race.get_id())->first)
+	{
 		Data.insert({race.get_id(), &race});
+	}
 	else
 	    cout << "Race with ID " << race.get_id() << " already exists." << endl;
 
@@ -197,6 +199,7 @@ void Track::Remove_race(const unsigned int id)
 	if(temp && temp->get_id() == id)
 	{
 		// Erasing the race object form the Data of the track
+		Data.find(id)->second = nullptr;
 		Data.erase(id);
 
 		// After removing the race we need to recalculate the
