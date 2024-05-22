@@ -8,9 +8,8 @@ class League
 {
 	friend Association;
     public:
-		// Constructors
+		// Constructor
         League(string name, string Reward);
-        League(League&);
 
 		// Removing a League from existance requires
 		// removing Race pointers from other classes

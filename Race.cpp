@@ -220,7 +220,7 @@ void Race::Remove_runner(const unsigned int id)
 
 bool Race::Find_runner(const unsigned int id)
 {
-    if(race_participants.Runners.find(id)->first == id)
+    if(race_participants.Runners.find(id) != race_participants.Runners.end())
         return true;
     return false;
 }
@@ -296,7 +296,8 @@ void Race::Calculate_average_time()
 
 void Race::Input_times()
 {
-    cout << "Input times: " << endl;
+	cout << Name << " Id: " << Id;
+    cout << "\nInput times: " << endl;
 
     string input;
     char *end;

@@ -5,4 +5,4 @@ compile:
 	g++ Member.o Race.o Track.o Main.o League.o Association.o -o Test
 
 clean:
-	del *.o
+	rm *.o

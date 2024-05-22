@@ -44,7 +44,7 @@ void League::Add_Race(Race& race)
 
     if(race.race_participants.Number_of_runners == 0)
     {
-        League_Races.insert({race.get_id(), &race});
+        League_Races.insert({race.get_id(), &(race)});
         for(auto& participant : League_Runners)
             race.Add_runner(*participant.second);
         
@@ -78,6 +78,7 @@ void League::Remove_race(const unsigned int id)
         {
             League_Races.clear();
             finished = false;
+			Winner = nullptr;
             return;
         }
 
@@ -171,15 +172,17 @@ void League::Next_stage()
         return;
     }
 
+	int i = 1;
     for(auto& race : League_Races)
     {
         if(!race.second->Is_finished())
         {
             race.second->Finish_race();
-            if(race.first == League_Races.end()->first)
-                break;
+			if(i == number_of_races)
+				break;
             return;
         }
+		i++;
     }
     finished = true;
     Declare_winner();
@@ -247,5 +250,5 @@ void League::Declare_winner()
     sort(Times.begin(), Times.end());
 
     Winner = League_Runners.find(Times[0].second)->second;
-    cout << "Winner of the league " << Name << "is " << Winner->get_name() << " with average time " << Times[0].first << endl;
+    cout << "Winner of the league " << Name << "is " << Winner->get_name() << " with time " << Times[0].first << endl;
 }

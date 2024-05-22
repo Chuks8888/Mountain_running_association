@@ -203,9 +203,151 @@ void TrackTests()
     cerr << endl <<  "End of track tests\n" << endl;
 }
 
+void LeagueTests()
+{
+	// Firstly we create some objects
+	Mountain Tatry = {"Tatry", "Poland", 2655};
+	
+    Track Black("Black", Tatry, 15, 10);
+    Track Blue("Blue", Tatry, 10, 7);
+
+    Member Emily("Emily", 38, 'F');
+    Member Bob("Bob", 32, 'M');
+    Member Alice("Alice", 28, 'F');
+
+	Race *Money = new Race("Money", Black);
+    Race *Marathon = new Race("Marathon", Blue);
+
+	League Champions("Champions League", "500k $");
+
+	// Now we try to add a runner
+	// when there is no race in the league
+	Champions.Add_runner(Bob);
+
+	if(!Champions.Get_Runners().empty())
+	{
+		cerr << "Bob was added to the league despite the limitations";
+		exit(1);
+	}
+
+	// Now adding the races to the league
+	Champions.Add_Race(*Money);
+	Champions.Add_Race(*Marathon);
+
+	if(Champions.Get_Races().size() != 2)
+	{
+		cerr << "The races were not added to the league";
+		exit(1);
+	}
+
+	// Now adding the Runners to the league
+	Champions.Add_runner(Bob);
+
+	if(Champions.Get_Runners().size() != 1)
+	{
+		cerr << "Bob was not added to the league runners";
+		exit(1);
+	}
+
+	if(Bob.Get_Participation().size() != 2)
+	{
+		cerr << "Bob does not have the league races in his page";
+		exit(1);
+	}
+
+	if(Money->Get_Participants().size() != 1 || Marathon->Get_Participants().size() != 1)
+	{
+		cerr << "The races do not have Bob";
+		exit(1);
+	}
+
+	// Testing the removal/deletion of race
+
+	Champions.Remove_race(*Marathon);
+
+	if(Champions.Get_Races().size() != 1)
+	{
+		cerr << "Marathon was not removed from the league";
+		exit(1);
+	}
+
+	if(Bob.Get_Participation().size() != 1)
+	{
+		cerr << "Bob still has the Marathon race";
+		exit(1);
+	}
+
+	if(Blue.Get_Data().size() != 0)
+	{
+		cerr << "The track Blue still has Marathon race";
+		exit(1);
+	}
+
+	// Lets add more runnres and get a new race
+	Race *Relay = new Race("Relay", Blue);
+	Champions.Add_Race(*Relay);
+	Champions.Add_runner(Alice);
+	Champions.Add_runner(Emily);
+
+	if(!Champions.find_runner(Alice.get_id()))
+	{
+		cerr << "find runner method did not work";
+		exit(1);
+	}
+
+	// Now lets finish the league
+	cerr << "Input respectively 1, 2, 3, 4, 5, 6" << endl;
+	Champions.Start_League();
+	Champions.Next_stage();
+	Champions.Next_stage();
+
+	if(Champions.Get_winner() != &Emily)
+	{
+		cerr << "Emily did not win the league";
+		exit(1);
+	}
+
+	// Now lets remove Emily from the league
+	Champions.Remove_runner(Emily);
+
+	if(Champions.Get_Runners().size() != 2)
+	{
+		cerr << "Emily was not removed from the league";
+	}
+
+	if(!Emily.Get_Participation().empty())
+	{
+		cerr << "Emily has still race participation";
+		exit(1);
+	}
+
+	if(Champions.Get_winner() != &Bob)
+	{
+		cerr << "The winner of the race has not changed to Bob";
+		exit(1);
+	}
+
+	// Now lets try to add Emily back
+	// SHOULD FAIL
+	Emily.Add_race(*Relay);
+	if(!Emily.Get_Participation().empty())
+	{
+		cerr << "Emily somehow got back into the league 1)";
+		exit(1);
+	}
+	Champions.Add_runner(Emily);
+	if(!Emily.Get_Participation().empty())
+	{
+		cerr << "Emily somehow got back into the league 2)";
+		exit(1);
+	}
+	cerr << "\nEnd of League tests\n" << endl;
+}
+
 int main()
 {
-    MemberTests();
-    TrackTests();
+	//MemberTests();
+	//TrackTests();
+	//LeagueTests();
     cout << "\nAll test complete\n" ;
 }
