@@ -344,6 +344,11 @@ void LeagueTests()
 	cerr << "\nEnd of League tests\n" << endl;
 }
 
+void RaceTests()
+{
+
+}
+
 int main()
 {
 	//MemberTests();
