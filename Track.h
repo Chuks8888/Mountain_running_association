@@ -55,6 +55,8 @@ class Track
 		
 		// Get method used for testing
 		const map<unsigned int, Race*> Get_Data() const;
+		const pair<float, Member*> Get_Best_time() const;
+		double get_average_time() const;
 
     private:
 		//	Best structure holds a pointer to the

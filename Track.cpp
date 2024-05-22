@@ -11,7 +11,7 @@ Track::Track(string name, Mountain &mountain, int length, unsigned int difficult
 	Name = name;
 	Where = &mountain;
 	mountain.mountains_tracks.insert({Id, this});
-	Difficulty = difficulty & 10;
+	Difficulty = (difficulty < 1) ? 1 : (difficulty > 10 ? 10 : difficulty);
 	Length = length;
 
 	Average_time = 0.0;
@@ -45,7 +45,6 @@ Track::~Track()
     cerr << "Location: " << Where->Name << endl;
     cout << "Difficulty: " << Difficulty << "/10" << endl;
     cout << "Length: " << Length << " kilometers" << endl;
-    
     if (!Data.empty()) 
 	{
         cout << "Number of Races: " << Data.size() << endl;
@@ -53,14 +52,14 @@ Track::~Track()
 
         for (const auto& pair : Data) 
 		{
-            cout << "Race ID: " << pair.first << endl;
-            cout << "Name: " << pair.second->get_name() << endl; 
+            cout << "Race ID: " << pair.first;
+            cout << " Name: " << pair.second->get_name() << endl; 
         }
+    	cout << "Average Time to Finish: " << Average_time << " minutes" << endl;
+		Print_Best();
+
 	} else cout << "No races held on this track yet." << endl;
-
-    cout << "Average Time to Finish: " << Average_time << " seconds" << endl;
-
-	Print_Best();
+	cerr << endl;
 }
 
 void Track::Print_Best()  const
@@ -68,7 +67,7 @@ void Track::Print_Best()  const
 	if (Best_time.runner != nullptr)
 	{
         cout << "Best Runner: " << Best_time.runner->get_name()<< endl;
-        cout << "Best Time: " << Best_time.time << " seconds" << endl;
+        cout << "Best Time: " << Best_time.time << " minutes" << endl;
 	} 
 	else
 		cout << "No best runner recorded yet." << endl;
@@ -89,8 +88,6 @@ void Track::Print_future_race() const
 
 void Track::Add_race(Race& race)
 {
-	// Inserts the Race* into the Data parameter
-	// map<unsigned int (ID of race), Race*> Data;
 	if(race.get_id() != Data.find(race.get_id())->first)
 	{
 		Data.insert({race.get_id(), &race});
@@ -108,7 +105,7 @@ void Track::Finish_race(unsigned int raceId)
 		if((i->second->Is_finished()) && (i->second->Get_winner() != nullptr))
 		{
 			// Checks if the winner of the race has the best time
-			Compare_best(const_cast<Member*>(i->second->Get_winner()), i->second->Get_Winner_time());
+			search_for_best();
 
 			// Calculates the average time now also 
 			// using the new data from the finished race
@@ -125,6 +122,20 @@ string Track::Get_Name() const
 const map<unsigned int, Race*> Track::Get_Data() const
 {
 	return Data;
+}
+
+const pair<float, Member*> Track::Get_Best_time() const
+{
+	if(Best_time.runner!= nullptr)
+	{
+		pair<float, Member*> temp = {Best_time.time, Best_time.runner};
+		return temp;	
+	} 
+	return make_pair(0.0, nullptr);
+}
+double Track::get_average_time() const
+{
+	return Average_time;
 }
 
 double Track::operator-=(double decrease)
@@ -162,19 +173,18 @@ Member* Track::search_for_best()
 		return nullptr;
 	}
 
-	Best_time.time = Average_time;
+	Best_time.time = 0.0;
 	for(const auto& race : Data)
 	{
 		if(race.second->Is_finished())
-			if(race.second->Get_Winner_time() >= Best_time.time)
-				Best_time.runner = const_cast<Member*>(race.second->Get_winner());
+			Compare_best(const_cast<Member*>(race.second->Get_winner()), race.second->Get_Winner_time());
 	}
 	return Best_time.runner;
 }
 
 void Track::Compare_best(Member* winner, float time)
 {
-	if(Best_time.time > time)
+	if((Best_time.time > time) || (Best_time.time == 0.0))
 	{
 		Best_time.runner = winner;
 		Best_time.time = time;

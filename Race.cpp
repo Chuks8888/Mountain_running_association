@@ -4,7 +4,7 @@
 #include "League.h"
 #include <string>
 
-Race::Race(string name, Track *where, League *which_League): Name(name), Where(where), Which_League(which_League)
+Race::Race(string name, Track &where, League *which_League): Name(name), Where(&where), Which_League(which_League)
 {
    Id = Ids;
    Ids++;
@@ -19,7 +19,7 @@ Race::Race(string name, Track *where, League *which_League): Name(name), Where(w
    race_participants.Number_of_runners = 0;
    race_participants.Winner =  nullptr;
 
-   where->Add_race(*this);
+   where.Add_race(*this);
 }
 
 Race::~Race()
@@ -74,7 +74,7 @@ void Race::Print() const
 
 void Race::Finish_race()
 {
-    if(Which_League->Get_status() == 0)
+    if(Which_League && Which_League->Get_status() == 0)
     {
         cout << "The league is not started" << endl;
         return;
@@ -85,7 +85,6 @@ void Race::Finish_race()
         Input_times();
         Assign_places();
         Declare_winner();
-        Calculate_average_time();
 
         finished = true;
         Where->Finish_race(Id);
@@ -154,7 +153,7 @@ void Race::Add_runner(Member& participant)
             race_participants.Runners.insert({participant.get_id(), &participant});
             participant.Add_race(*this);
             race_participants.Number_of_runners++;
-            cout << participant.get_name() << " added to the race" << endl;
+            cout << participant.get_name() << " added to the race " << Name << endl;
         }
         else cout << "This participant is already in the race" << endl;
     }
@@ -197,25 +196,20 @@ void Race::Remove_runner(const unsigned int id)
         if(finished)
         {
             vector<double>::const_iterator time = race_participants.Times.begin();
-            vector<unsigned int>::const_iterator place = race_participants.Places.begin();
+            for(map<unsigned int, Member*>::const_iterator temp = race_participants.Runners.begin(); temp->first != participant-> first; temp++)
+                ++time;
 
-            for(map<unsigned int, Member*>::const_iterator temp = race_participants.Runners.begin(); temp!= participant; temp++)
-            {
-                time++;
-                place++;
-            }
             race_participants.Times.erase(time);
-            race_participants.Places.erase(place);
+            race_participants.Places.clear();
 
             race_participants.Number_of_runners--;
+            race_participants.Runners.erase(id);
 
-            if(race_participants.Winner == participant->second)
-            {
-                Assign_places();
-                Declare_winner();
-            }
+            Assign_places();
+            Declare_winner();
+            Where->Finish_race(Id);
         }
-        race_participants.Runners.erase(id);
+        else race_participants.Runners.erase(id);
     }
 
     if((finished) && (race_participants.Number_of_runners == 0))
@@ -278,15 +272,15 @@ void Race::clear()
     }
 	else
 	{
+		Where->Remove_race(Id);
+		Where = nullptr;
+
 		for(auto& participant : race_participants.Runners)
 		{
 			participant.second->Remove_race(Id);
 		}
 		race_participants.Runners.clear();
 		race_participants.Winner = nullptr;
-
-		Where->Remove_race(Id);
-		Where = nullptr;
 	}
 }
 
@@ -347,6 +341,7 @@ void Race::Assign_places()
             }
         }
     }
+    Calculate_average_time();
 }
 
 void Race::Declare_winner()

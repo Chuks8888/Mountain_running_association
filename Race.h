@@ -13,7 +13,7 @@ class Race
 		//	Constructors, to construct a Race we need to have 
 		//	selected a Track and a league for it, if the Track is nullptr
 		//	then the construction will not happen
-        Race(string name, Track *where, League *which_League = nullptr);
+        Race(string name, Track &where, League *which_League = nullptr);
         Race(Race&);
 
 		//	The deconstruction of the Race, means that we need

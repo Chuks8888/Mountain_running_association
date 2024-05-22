@@ -275,9 +275,10 @@ int Association::Edit_Race(unsigned int id)
                                 new_time_value = strtod(new_time.c_str(), &end);
                             } while (new_time_value > 0);
 
-                            race->race_participants.Times[selected_member-1] = new_time_value;
+                            race->race_participants.Times[selected_member-2] = new_time_value;
                             race->Assign_places();
                             race->Declare_winner();
+                            race->Where->Finish_race(race->Id);
                             return 1;
                         }
                     }
