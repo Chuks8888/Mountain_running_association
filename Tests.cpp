@@ -346,13 +346,126 @@ void LeagueTests()
 
 void RaceTests()
 {
+    // Firstly we create some objects
+	Mountain Tatry = {"Tatry", "Poland", 2655};
+	
+    Track Black("Black", Tatry, 15, 10);
+    Track Blue("Blue", Tatry, 10, 7);
 
+    Member Emily("Emily", 38, 'F');
+    Member Bob("Bob", 32, 'M');
+    Member Alice("Alice", 28, 'F');
+    
+    League Champions("Champions League", "500k $");
+    // Test of constructor
+    Race *Relay = new Race("Relay", Black, &Champions);
+
+    if(Champions.Get_Races().empty())
+    {
+        cerr << "The race was not added to the league";
+        exit(1);
+    }
+    if(Black.Get_Data().size() == 0)
+    {
+        cerr << "The race was not added to the track";
+        exit(1);
+    }
+    if(Relay->Get_Where() != &Black)
+    {
+        cerr << "The track was not added to the race";
+        exit(1);
+    }
+
+    // Test of adding a runner
+    Champions.Add_runner(Bob);
+    if(Bob.Get_Participation().empty())
+    {
+        cerr << "Bob was not added to the race";
+        exit(1);
+    }
+    if(Relay->Get_Participants().empty())
+    {
+        cerr << "The race has not added any runners";
+        exit(1);
+    }
+
+    // Test of finding a runner
+    if(!Relay->Find_runner(Bob.get_id()))
+    {
+        cerr << "find runner method did not work";
+        exit(1);
+    }
+
+    // Test of destructor
+    delete Relay;
+
+    if(!Black.Get_Data().empty())
+    {
+        cerr << "The race was not deleted from the track";
+        exit(1);
+    }
+    if(!Champions.Get_Races().empty())
+    {
+        cerr << "The race was not deleted from the league";
+        exit(1);
+    }
+    if(!Bob.Get_Participation().empty())
+    {
+        cerr << "Bob was not deleted from the race";
+        exit(1);
+    }
+
+    // create some more objects to test with
+    Race *Money = new Race("Money", Black);
+    Money->Add_runner(Alice);
+    Money->Add_runner(Bob);
+    Money->Add_runner(Emily);
+
+    // Lets finish the race
+    cerr << "!!!Input respectively 1, 2, 3!!!" << endl;
+    Money->Finish_race();
+
+    if(Money->Get_winner() != &Emily)
+    {
+        cerr << "The winner of the race was not Emily";
+        exit(1);
+    }
+    if(Money->Get_Average_time() != 2)
+    {
+        cerr << "The average time of the race was not calcualted correctly";
+        exit(1);
+    }
+
+    // Now lets remove Emily from the race
+    Money->Remove_runner(Emily);
+
+    if(!Emily.Get_Participation().empty())
+    {
+        cerr << "Emily was not removed from the race";
+        exit(1);
+    }
+    if(Money->Get_winner() != &Bob)
+    {
+        cerr << "The winner of the race has not changed to Bob";
+        exit(1);
+    }
+    if(Money->Get_Average_time() != 2.5)
+    {
+        cerr << "The average time of the race after removing Emily was not calcualted correctly";
+        exit(1);
+    }
+    cerr << "End of Race tests\n" << endl;
 }
 
-int main()
+void Tests()
 {
-	//MemberTests();
-	//TrackTests();
-	//LeagueTests();
+    cerr << "\nStart of Race test" << endl;
+    RaceTests();
+    cerr << "\nStart of Member test" << endl;
+	MemberTests();
+    cerr << "\nStart of Track test" << endl;
+    TrackTests();
+    cerr << "\nStart of League test" << endl;
+	LeagueTests();
     cout << "\nAll test complete\n" ;
 }

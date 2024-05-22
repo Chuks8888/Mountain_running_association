@@ -11,13 +11,13 @@ Race::Race(string name, Track &where, League *which_League): Name(name), Where(&
 
    finished = false;
 
+   race_participants.Number_of_runners = 0;
+   race_participants.Winner =  nullptr;
+
    if (which_League!= nullptr)
    {
       which_League->Add_Race(*this);
    }
-
-   race_participants.Number_of_runners = 0;
-   race_participants.Winner =  nullptr;
 
    where.Add_race(*this);
 }
@@ -252,12 +252,14 @@ bool Race::Is_finished() const
 
 void Race::operator=(Track& track)
 {
-    if(!finished)
+    if(true)
     {
         Where->Remove_race(Id);
         Where = &track;
 
         Where->Add_race(*this);
+        if(finished)
+            Where->Finish_race(Id);
     }
     else cout << "The race is finished and cannot be changed" << endl;
 }

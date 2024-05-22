@@ -106,4 +106,7 @@ struct Mountain
  
 };
 
+// Declaration of decision function
+unsigned int Decision(int, int);
+
 #endif

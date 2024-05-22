@@ -44,7 +44,7 @@ void League::Add_Race(Race& race)
 
     if(race.race_participants.Number_of_runners == 0)
     {
-        League_Races.insert({race.get_id(), &(race)});
+        League_Races.insert({race.get_id(), &race});
         for(auto& participant : League_Runners)
             race.Add_runner(*participant.second);
         
