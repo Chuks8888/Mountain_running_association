@@ -2,6 +2,8 @@
 #include "Track.h"
 #include "Member.h"
 #include "League.h"
+#include <ctype.h>
+#include <cctype>
 
 unsigned int Decision(int lower, int upper)
 {
@@ -11,10 +13,10 @@ unsigned int Decision(int lower, int upper)
 
     do
     {
-        cin >> decision;
-        choice = strtol(decision.c_str(), &end, 10);
+		cin >> decision;
+		choice = strtol(decision.c_str(), &end, 10);
 
-    } while ((lower == upper)? (choice < lower) : (choice < lower || choice > upper));
+    } while (choice <= 0 && (lower == upper)? (choice < lower) : (choice < lower || choice > upper));
 
     return choice;
 }
@@ -124,7 +126,7 @@ int Association::Edit_Race(unsigned int id)
         chosen_id = id;
         race->Print();
         cout << "\nWhat do you wish to edit?" << endl;
-        cout << "0. Go back to main menu" << endl;
+        cout << "Press any other key to go back" << endl;
         cout << "1. Name" << endl;
         cout << "2. Track" << endl;
         cout << "3. Runners" << endl;
@@ -157,7 +159,7 @@ int Association::Edit_Race(unsigned int id)
             case 2:
             {
                 cout << "Do you wish to: " << endl;
-                cout << "Press 0 to go back" << endl;
+                cout << "Press any other key to go back" << endl;
                 cout << "1. Change the track" << endl;
                 cout << "2. Eddit the current track" << endl;
                 cout << "Decision: ";
@@ -199,7 +201,7 @@ int Association::Edit_Race(unsigned int id)
             case 3:
             {
                 cout << "Do you wish to: " << endl;
-                cout << "Press 0 to go back" << endl;
+                cout << "Press any other key to go back" << endl;
                 cout << "1. Add a runner" << endl;
                 cout << "2. Remove a runner" << endl;
                 cout << "3. Edit a runner (time and runner)" << endl;
@@ -240,7 +242,7 @@ int Association::Edit_Race(unsigned int id)
                 {
                     if(!race->race_participants.Runners.empty())
                     {
-                        cout << "Press 0 to go back" << endl;
+                        cout << "Press any other key to go back" << endl;
                         do
                         {
                             race->Print();
@@ -271,7 +273,7 @@ int Association::Edit_Race(unsigned int id)
                     }
 
                     cout << "Do you wish to: " << endl;
-                    cout << "Press 0 to go back" << endl;
+                    cout << "Press any other key to go back" << endl;
                     cout << "1. Change the time" << endl;
                     cout << "2. Edit the runner" << endl;
                     cout << "Decision: ";
@@ -375,7 +377,7 @@ int Association::Edit_League(unsigned int id)
             cout << "Runner: " << member.second->Name << "Id " << member.second << endl;
         
         cout << "What do you wish to edit: " << endl;
-        cout << "Press 0 to go back" << endl;
+        cout << "Press any other key to go back" << endl;
         cout << "1. Name" << endl;
         cout << "2. Race" << endl;
         cout << "3. Member" << endl;
@@ -398,7 +400,7 @@ int Association::Edit_League(unsigned int id)
             case 2:
             {
                 cout << "Do you wish to: " << endl;
-                cout << "Press 0 to go back" << endl;
+                cout << "Press any other key to go back" << endl;
                 cout << "1. Add a race" << endl;
                 cout << "2. Remove a race" << endl;
                 cout << "3. Edit a race" << endl;
@@ -411,7 +413,7 @@ int Association::Edit_League(unsigned int id)
                 {
                     for(const auto& race : races)
                         cout << race.second->Name << "Id " << race.second->Id << endl;   
-                    cout << "Press 0 to go back" << endl;
+                    cout << "Press any other key to go back" << endl;
                     cout << "Add?: ";
                     select = Decision(0, 0);
                     if(select < 2)
@@ -425,7 +427,7 @@ int Association::Edit_League(unsigned int id)
 
                 for(const auto& race : league->Get_Races())
                         cout << race.second->Name << "Id " << race.second->Id << endl;
-                    cout << "Press 0 to go back" << endl;
+                    cout << "Press any other key to go back" << endl;
 
                 if(decision1 == 2)
                 {
@@ -463,7 +465,7 @@ int Association::Edit_League(unsigned int id)
             case 3:
             {
                 cout << "Do you wish to: " << endl;
-                cout << "Press 0 to go back" << endl;
+                cout << "Press any other key to go back" << endl;
                 cout << "1. Add a runner" << endl;
                 cout << "2. Remove a runner" << endl;
                 cout << "3. Edit a runner" << endl;
@@ -501,7 +503,7 @@ int Association::Edit_League(unsigned int id)
                 }
                 for(const auto& member : league->Get_Runners())
                     cout << member.second->Name << " Id " << member.first << endl;
-                cout << "Press 0 to go back" << endl;
+                cout << "Press any other key to go back" << endl;
                 /* Remove Runners */
                 if(decision1 == 2)
                 {
@@ -597,7 +599,7 @@ int Association::Edit_Member(unsigned int id)
         member->Print();
 
         cout << "Do you wish to: " << endl;
-        cout << "Press 0 to go back" << endl;
+        cout << "Press any other key to go back" << endl;
         cout << "1. Change the name" << endl;
         cout << "2. Increase the age" << endl;
         cout << "3. Display/Edit Member's races" << endl;
@@ -617,14 +619,14 @@ int Association::Edit_Member(unsigned int id)
             }
             case 2:
             {
-                member++;
+                member->Age++;
                 return 3;
             }
             case 3:
             {
                 for(const auto &race : member->Get_Participation())
                     cout << race.second->Name << " Id: " << race.second->Id << endl;
-                cout << "Press 0 to go back" << endl;
+                cout << "Press any other key to go back" << endl;
                 cout << "Edit?: ";
                 select = Decision(0, 0);
                 if(select < 2)
@@ -671,7 +673,7 @@ int Association::Edit_Track(unsigned int id)
         track->Print();
 
         cout << "Do you wish to: " << endl;
-        cout << "Press 0 to go back" << endl;
+        cout << "Press any other key to go back" << endl;
         cout << "1. Change the name" << endl;
         cout << "2. Adjust the length" << endl;
         cout << "3. Increase the difficulty" << endl;
@@ -730,7 +732,7 @@ int Association::Edit_Track(unsigned int id)
             {
                 for(const auto &race : track->Get_Data())
                     cout << race.second->Name << " Id: " << race.second->Id << endl;
-                cout << "Press 0 to go back" << endl;
+                cout << "Press any other key to go back" << endl;
                 cout << "Edit?: ";
                 select = Decision(0, track->Get_Data().size() + 1);
                 if(select < 2)

@@ -64,7 +64,7 @@ int main()
             cout << "6. Show future Races" << endl;
             cout << "7. Display/Edit Members" << endl;
             cout << "8. Display/Edit Tracks" << endl;
-            cout << "0. Exit" << endl;
+            cout << "Press any other key to exit" << endl;
             cout << "Enter your choice: ";
             input = Decision(0, 8);
         
