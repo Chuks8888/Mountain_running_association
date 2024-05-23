@@ -153,14 +153,14 @@ double Track::operator+=(double increase)
 
 unsigned int Track::operator++()
 {
-	if(Difficulty != 10)
+	if(Difficulty <= 10)
 		Difficulty++;
 	return Difficulty;
 }
 
 unsigned int Track::operator--()
 {
-	if(Difficulty != 1)
+	if(Difficulty > 1)
 		Difficulty--;
 	return Difficulty;
 }

@@ -25,6 +25,11 @@ Member::Member(Member& member)
 
 Member::~Member()
 {
+	clear();
+}
+
+void Member::clear()
+{
 	while(!Participation.empty())
 	{
 		for(auto& race : Participation)

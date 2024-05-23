@@ -22,7 +22,7 @@ unsigned int Decision(int lower, int upper)
 Association::Association(string name)
 {
     Name = name;
-    cout << Decision(0, 5) << endl;
+    chosen_id = 0;
 }
 
 Association::~Association()
@@ -31,22 +31,6 @@ Association::~Association()
     for(auto& league : leagues)
     {
         delete league.second;
-    }
-
-    // deletes all tracks and races that are there
-    for(auto& track : tracks)
-    {
-        delete track.second;
-    }
-
-    for(auto& member : members)
-    {
-        delete member.second;
-    }
-
-    for(auto& mountain : mountains)
-    {
-        delete mountain;
     }
 
     leagues.clear();
@@ -76,10 +60,50 @@ unsigned int Association::Add_Race(Race& race)
     return race.get_id();
 }
 
+int Association::Add_Race()
+{
+    cout << "Creating a new race" << endl;
+
+    cout << "Name: ";
+    string name;
+    cin >> name;
+
+    Print_Tracks();
+    cout << "Select a Track: ";
+    unsigned int track_id = Decision(2, tracks.size() + 1);
+
+    Race *temp = new Race(name, *tracks.find(track_id)->second);
+    races.insert({temp->Id, temp});
+
+    chosen_id = temp->Id;
+    return 1;
+}
+
 unsigned int Association::Add_League(League& league)
 {
     leagues.insert({league.get_id(), &league});
     return league.get_id();
+}
+
+int Association::Add_League()
+{
+    cout << "Creating a new league" << endl;
+
+    cout << "Name: ";
+    string name;
+    cin >> name;
+
+    cin.ignore();
+
+    cout << "Reward: ";
+    string reward;
+    cin >> reward;
+
+    League *temp = new League(name, reward);
+    leagues.insert({temp->Id, temp});
+
+    chosen_id = temp->Id;
+    return 2;
 }
 
 void Association::Add_Mountain(Mountain& mountain)
@@ -99,7 +123,7 @@ int Association::Edit_Race(unsigned int id)
     {
         chosen_id = id;
         race->Print();
-        cout << "\nWhat do you want to edit?" << endl;
+        cout << "\nWhat do you wish to edit?" << endl;
         cout << "0. Go back to main menu" << endl;
         cout << "1. Name" << endl;
         cout << "2. Track" << endl;
@@ -204,7 +228,7 @@ int Association::Edit_Race(unsigned int id)
                             break;
 
                         Member *find_member = members.find(selected_member)->second;
-                        if(selected_member == find_member->get_id())
+                        if(find_member && selected_member == find_member->get_id())
                             race->Add_runner(*find_member);
                         else
                             cout << "Member not found" << endl;
@@ -227,7 +251,7 @@ int Association::Edit_Race(unsigned int id)
                                 break;
 
                             Member *find_member = members.find(selected_member)->second;
-                            if(selected_member == find_member->get_id())
+                            if(find_member && selected_member == find_member->get_id())
                                 race->Remove_runner(*find_member);
                             else
                                 cout << "Member not found" << endl;
@@ -263,7 +287,7 @@ int Association::Edit_Race(unsigned int id)
                         }
                         race->Print();
                         cout << "Change the time of: ";
-                        selected_member = Decision(0,0);
+                        selected_member = Decision(0, 0);
                         if(selected_member == race->race_participants.Runners.find(selected_member)->first)
                         {
                             string new_time;
@@ -279,6 +303,10 @@ int Association::Edit_Race(unsigned int id)
                             race->Assign_places();
                             race->Declare_winner();
                             race->Where->Finish_race(race->Id);
+
+                            if(race->Which_League && race->Which_League->Get_status() == 2)
+                                race->Which_League->Declare_winner();
+
                             return 1;
                         }
                     }
@@ -301,7 +329,6 @@ int Association::Edit_Race(unsigned int id)
                     }
                     /* go back */
                     return 1;
-
                 }
             }
             /* Delete the Race */
@@ -328,6 +355,398 @@ int Association::Edit_Race(unsigned int id)
         chosen_id = 0;
         return 0;
     }
+}
+
+int Association::Edit_League(unsigned int id)
+{
+    if(leagues.find(id) != leagues.end())
+    {
+        unsigned int input = 0;
+        unsigned int select = 0;
+        chosen_id = id;
+        League *league = leagues.find(id)->second;
+
+        cout << "League: " << league->Name << endl;
+        cout << "League Id: " << league->Id << endl;
+        for(const auto& race : league->Get_Races())
+            cout << "Race: " << race.second->Name << "Id " << race.second->Id << endl;
+        cout << "Participants: " << endl;
+        for(const auto& member : league->Get_Runners())
+            cout << "Runner: " << member.second->Name << "Id " << member.second << endl;
+        
+        cout << "What do you wish to edit: " << endl;
+        cout << "Press 0 to go back" << endl;
+        cout << "1. Name" << endl;
+        cout << "2. Race" << endl;
+        cout << "3. Member" << endl;
+        cout << "4. Delete the league" << endl;
+        if(!league->finished)
+            cout << "5. Progress the league" << endl;
+        cout << "Decision: ";
+        input = Decision(0, league->finished ? 4 : 5);
+
+        switch(input)
+        {
+            case 1:
+            {
+                string new_name;
+                cout << "New name: ";
+                cin >> new_name;
+                league->Name = new_name;
+                return 2;
+            }
+            case 2:
+            {
+                cout << "Do you wish to: " << endl;
+                cout << "Press 0 to go back" << endl;
+                cout << "1. Add a race" << endl;
+                cout << "2. Remove a race" << endl;
+                cout << "3. Edit a race" << endl;
+                cout << "Decision: ";
+
+                unsigned int decision1 = Decision(0, 3);
+                if(decision1 == 0)
+                    return 2;
+                if(decision1 == 1)
+                {
+                    for(const auto& race : races)
+                        cout << race.second->Name << "Id " << race.second->Id << endl;   
+                    cout << "Press 0 to go back" << endl;
+                    cout << "Add?: ";
+                    select = Decision(0, 0);
+                    if(select < 2)
+                        return 2;
+                    else
+                    {
+                        league->Add_Race(*races.find(select)->second);
+                        return 2;
+                    }
+                }
+
+                for(const auto& race : league->Get_Races())
+                        cout << race.second->Name << "Id " << race.second->Id << endl;
+                    cout << "Press 0 to go back" << endl;
+
+                if(decision1 == 2)
+                {
+                    cout << "Remove?: ";
+                    select = Decision(0, 0);
+                    if(select < 2)
+                        return 2;
+                    else
+                    {
+                        if(league->Get_Races().find(select) != league->Get_Races().end())
+                        {
+                            league->Remove_race(*races.find(select)->second);
+                            races.erase(select);
+                        }
+                        return 2;
+                    }
+                }
+                else
+                {
+                    cout << "Edit?: ";
+                    select = Decision(0, 0);
+                    if(select < 2)
+                        return 2;
+                    else
+                    {
+                        if(league->Get_Races().find(select) != league->Get_Races().end())
+                        {
+                            chosen_id = select;
+                            return 1;
+                        }
+                        return 2;
+                    }
+                }
+            }
+            case 3:
+            {
+                cout << "Do you wish to: " << endl;
+                cout << "Press 0 to go back" << endl;
+                cout << "1. Add a runner" << endl;
+                cout << "2. Remove a runner" << endl;
+                cout << "3. Edit a runner" << endl;
+                cout << "Decision: ";
+
+                unsigned int decision1 = Decision(0, 3);
+                if(decision1 == 0)
+                    return 2;
+                /* Add runners */
+                if(decision1 == 1)
+                {
+                    if(members.empty())
+                    {
+                        cout << "There are no members" << endl;
+                        return 2;
+                    }
+                    cout << endl;
+                    Print_Members();
+                    cout << "Press 0 to go back" << endl;
+                    do
+                    {
+                        cout << "Add?: ";
+                        select = Decision(0, 0);
+
+                        if(select < 2)
+                            break;
+
+                        Member *find_member = members.find(select)->second;
+                        if(find_member && select == find_member->get_id())
+                            league->Add_runner(*find_member);
+                        else
+                            cout << "Member not found" << endl;
+                    } while (select < 2);
+                    return 2;
+                }
+                for(const auto& member : league->Get_Runners())
+                    cout << member.second->Name << " Id " << member.first << endl;
+                cout << "Press 0 to go back" << endl;
+                /* Remove Runners */
+                if(decision1 == 2)
+                {
+                    if(!league->Get_Runners().empty())
+                    {
+                        do
+                        {
+                            cout << "Remove?: ";
+                            select = Decision(0, 0);
+
+                            if(select < 2)
+                                break;
+
+                            Member *find_member = members.find(select)->second;
+                            if(find_member && select == find_member->get_id())
+                                league->Remove_runner(*find_member);
+                            else
+                                cout << "Member not found" << endl;
+                        } while (select != 0);
+                    }
+                    else 
+                        cout << "There are no runners" << endl;
+                    return 1;
+                }
+                /* Edit runners */
+                else
+                {
+                    if(members.empty())
+                    {
+                        cout << "There are no members" << endl;
+                        return 1;
+                    }
+
+                    cout << "Edit?: ";
+
+                    select = Decision(0, 0);
+
+                    if(league->Get_Runners().find(select) != league->Get_Runners().end())
+                    {
+                        chosen_id = select;
+                        return 3;
+                    }
+                    else
+                    {
+                        cout << "Member not found" << endl;
+                        return 2;
+                    }
+                    return 2;
+                }   
+            }
+            case 4:
+            {
+                cout << "Are you sure you want to delete the league? (y/n)" << endl;
+                string decision1;
+                cin >> decision1;
+                if(decision1 == "y")
+                {
+                    for(const auto& race : league->League_Races)
+                        races.erase(race.first);
+                    delete league;
+                    leagues.erase(id);
+                }
+                chosen_id = 0;
+                return 0;
+            }
+            case 5:
+            {
+                cout << "Are you sure you want to progress the league? (y/n)" << endl;
+                string decision1;
+                cin >> decision1;
+                if(decision1 == "y")
+                {
+                    if(league->In_progress)
+                        league->Next_stage();
+                    else league->Start_League();
+                }
+                return 2;
+            }
+        }
+    }
+    chosen_id = 0;
+    return 0;
+}
+
+int Association::Edit_Member(unsigned int id)
+{
+    if(members.find(id) != members.end())
+    {
+        unsigned int input = 0;
+        unsigned int select = 0;
+        chosen_id = id;
+        Member *member = members.find(id)->second;
+        member->Print();
+
+        cout << "Do you wish to: " << endl;
+        cout << "Press 0 to go back" << endl;
+        cout << "1. Change the name" << endl;
+        cout << "2. Increase the age" << endl;
+        cout << "3. Display/Edit Member's races" << endl;
+        cout << "4. Remove the member from the association" << endl;
+        cout << "Decision: ";
+        input = Decision(0, 4);
+
+        switch (input)
+        {
+            case 1:
+            {
+                string new_name;
+                cout << "New name: ";
+                cin >> new_name;
+                member->Name = new_name;
+                return 3;
+            }
+            case 2:
+            {
+                member++;
+                return 3;
+            }
+            case 3:
+            {
+                for(const auto &race : member->Get_Participation())
+                    cout << race.second->Name << " Id: " << race.second->Id << endl;
+                cout << "Press 0 to go back" << endl;
+                cout << "Edit?: ";
+                select = Decision(0, 0);
+                if(select < 2)
+                    return 3;
+                else
+                {
+                    chosen_id = select;
+                    return 1;
+                }
+            }
+            case 4:
+            {
+                cout << "Are you sure you want to delete the member? (y/n)" << endl;
+                string decision;
+                cin >> decision;
+                if(decision == "y")
+                {
+                    member->clear();
+                    members.erase(id);
+                    chosen_id = 0;
+                    return 0;
+                }
+                return 3;
+            }
+            default:
+            {
+                chosen_id = 0;
+                return 0;
+            }
+        }
+    }
+    chosen_id = 0;
+    return 0;
+}
+
+int Association::Edit_Track(unsigned int id)
+{
+    if(tracks.find(id)!= tracks.end())
+    {
+        unsigned int input = 0;
+        unsigned int select = 0;
+        chosen_id = id;
+        Track *track = tracks.find(id)->second;
+        track->Print();
+
+        cout << "Do you wish to: " << endl;
+        cout << "Press 0 to go back" << endl;
+        cout << "1. Change the name" << endl;
+        cout << "2. Adjust the length" << endl;
+        cout << "3. Increase the difficulty" << endl;
+        cout << "4. Decrease the difficulty" << endl;
+        if(!track->Get_Data().empty())
+            cout << "5. Display/Edit Track's races" << endl;
+        cout << "Decision: ";
+        input = Decision(0, track->Get_Data().empty() ? 4 : 5);
+
+        switch(input)
+        {
+            case 1:
+            {
+                string new_name;
+                cout << "New name: ";
+                cin >> new_name;
+                track->Name = new_name;
+                return 4;
+            }
+            case 2:
+            {
+                string input1;
+                char *end;
+                double length;
+
+                cout << "1 Add" << endl;
+                cout << "2 Subtract" << endl;
+                cout << "Decision: ";
+                if(Decision(1, 2) == 1)
+                {
+                    cout << "Value: ";
+                    cin >> input1;
+                    length = strtod(input1.c_str(), &end);
+                    track->Length += length;
+                }
+                else
+                {
+                    cout << "Value: ";
+                    cin >> input1;
+                    length = strtod(input1.c_str(), &end);
+                    track->Length -= length;
+                }
+                return 4;
+            }
+            case 3:
+            {
+                track->Difficulty++;
+                return 4;
+            }
+            case 4:
+            {
+                track->Difficulty--;
+                return 4;
+            }
+            case 5:
+            {
+                for(const auto &race : track->Get_Data())
+                    cout << race.second->Name << " Id: " << race.second->Id << endl;
+                cout << "Press 0 to go back" << endl;
+                cout << "Edit?: ";
+                select = Decision(0, track->Get_Data().size() + 1);
+                if(select < 2)
+                    return 4;
+                else
+                {
+                    chosen_id = select;
+                    return 1;
+                }
+            }
+            default:
+                break;
+        }
+    }
+    chosen_id = 0;
+    return 0;
 }
 
 int Association::Print_Unfinished_Races() const
@@ -390,16 +809,9 @@ void Association::Print_Leagues() const
     for(const auto &league : leagues)
     {
         cout << league.second->Name << " Id: " << league.second->Id << endl;
+        if(league.second->Winner)
+            cout << "Winner: " << league.second->Winner->Name << " Id: " << league.second->Winner->Id << endl;
         cout << "Reward: " << league.second->Reward << endl;
-        for(const auto &race: league.second->League_Races)
-        {
-            cout << race.second->Name << " Id: " << race.second->Id << endl;
-        }
-        cout << "Runners: " << endl;
-        for(const auto &member: league.second->League_Runners)
-        {
-            cout << member.second->Name << " Id: " << member.second->Id << endl;
-        }
     }
 }
 

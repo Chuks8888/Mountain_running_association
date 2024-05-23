@@ -31,15 +31,14 @@ class Association
 		//	one can either do all of it manually, or when the data
 		//	is being read from txt files, the methods return the id
 		//	of the thing being added
-        unsigned int Add_Member(Member&);    unsigned int Add_Member();
-        unsigned int Add_Track(Track&);     unsigned int Add_Track();
-        unsigned int Add_Race(Race&);       unsigned int Add_Race();
-        unsigned int Add_League(League&);   unsigned int Add_League();
+        unsigned int Add_Member(Member&);
+        unsigned int Add_Track(Track&); 
+        unsigned int Add_Race(Race&);       int Add_Race();
+        unsigned int Add_League(League&);   int Add_League();
 
 		//	The same goes for the mountain structure, there are two
 		//	ways of adding one
         void Add_Mountain(Mountain&);
-		void Add_Mountain();
 
 		//	Those methods are a way to interactively change the
 		//	parameters within the stored classes
@@ -62,6 +61,8 @@ class Association
 		void Print_Leagues() const;
 		void Print_Mountains() const;
 
+		unsigned int chosen_id;
+
 		// Getting the objects to check their content
 		// ONLY USED FOR TESTING
 		map<unsigned int, Member*> Get_member_map() const;
@@ -73,8 +74,6 @@ class Association
     private:
 		//	Name of the associaition
 		string Name;
-
-		unsigned int chosen_id;
 
 		//	The main class has a map of all the objects added to it
 		//	all elements of the map are pointers with keys being the ids

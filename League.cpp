@@ -186,6 +186,8 @@ void League::Next_stage()
     }
     finished = true;
     Declare_winner();
+    if(Winner)
+        cout << "Winner of the league " << Name << "is " << Winner->get_name() << endl;
 }
 
 const Member* League::Get_winner() const
@@ -250,5 +252,4 @@ void League::Declare_winner()
     sort(Times.begin(), Times.end());
 
     Winner = League_Runners.find(Times[0].second)->second;
-    cout << "Winner of the league " << Name << "is " << Winner->get_name() << " with time " << Times[0].first << endl;
 }

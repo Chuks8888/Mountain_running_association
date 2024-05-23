@@ -83,6 +83,9 @@ class Member
 
 		// checks for any participation
         bool empty() const; 
+
+		// used during destruction of the object
+		void clear(); 
 		
 };
 

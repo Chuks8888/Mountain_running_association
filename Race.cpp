@@ -92,7 +92,7 @@ void Race::Finish_race()
         for(const auto& participant : race_participants.Runners)
             participant.second->Calculate_performance();
 
-        cerr << "Race " << Name << " " << Id << " finished" << endl << endl;
+        cerr << "Race " << Name << " " << Id << " finished" << endl;
     }
     else
         cout << "There are no participants in the race" << endl;
@@ -212,7 +212,7 @@ void Race::Remove_runner(const unsigned int id)
         else race_participants.Runners.erase(id);
     }
 
-    if((finished) && (race_participants.Number_of_runners == 0))
+    if((finished) && (race_participants.Runners.empty()))
     {
         finished = false;
     }
