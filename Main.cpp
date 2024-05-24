@@ -2,6 +2,7 @@
 #include "Member.h"
 #include "Track.h"
 #include "League.h"
+#include "Tests.h"
 
 void Countinue()
 {
@@ -10,8 +11,18 @@ void Countinue()
     cin.ignore();
 }
 
+//#define TEST
+
+#define check 0
+
+#ifdef TEST
+#define check 1
+#endif
+
 int main()
 {
+    if(check)
+        Tests();
     // defining the Association
     Association association("MRA");
 

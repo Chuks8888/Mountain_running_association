@@ -2,6 +2,7 @@
 #include "Track.h"
 #include "Member.h"
 #include "League.h"
+#include "Tests.h"
 
 unsigned int Race::Ids = 2;
 unsigned int Track::Ids = 2;
