@@ -41,7 +41,7 @@ Track::~Track()
 
  void Track::Print() const 
 {
-    cout << "Track Name: " << Name << endl;
+    cout << "\nTrack Name: " << Name << endl;
     cerr << "Location: " << Where->Name << endl;
     cout << "Difficulty: " << Difficulty << "/10" << endl;
     cout << "Length: " << Length << " kilometers" << endl;

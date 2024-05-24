@@ -11,6 +11,7 @@ void Countinue()
     cin.ignore();
 }
 
+// uncomment the test in order to do the unit tests
 //#define TEST
 
 #define check 0
@@ -22,7 +23,9 @@ void Countinue()
 int main()
 {
     if(check)
+	{
         Tests();
+	}
     // defining the Association
     Association association("MRA");
 

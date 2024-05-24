@@ -43,7 +43,7 @@ void Member::clear()
 
 void Member::Print() const
 {
-	cout << "Runner: " << Name << endl;
+	cout << "\nRunner: " << Name << endl;
 	cout << "ID: " << Id << endl;
 	cout << "Membership: " << Membership << endl;
 	if(Membership == 2)

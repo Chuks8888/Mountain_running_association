@@ -32,7 +32,7 @@ Race::~Race()
 
 void Race::Print() const
 {   
-    cout << "Race name: " << Name << endl << "Race Id: " << get_id() << endl;
+    cout << "\nRace name: " << Name << endl << "Race Id: " << get_id() << endl;
     cout << "Track name: " << Where->Get_Name() << endl << "Track Id: " << Where->get_id() << endl;
     if(Which_League!= nullptr)
         cout << "League: " << Which_League->Get_Name() << " Id: " << Which_League->get_id() << endl;
@@ -334,7 +334,7 @@ void Race::Assign_places()
     // Assigning places
     for(const auto& participant : race_participants.Runners)
     {
-        int i = race_participants.Number_of_runners - 1;
+        int i = race_participants.Runners.size() - 1;
         for(i; i >= 0; i--)
         {
             if(sorted_times[i].second == participant.first)

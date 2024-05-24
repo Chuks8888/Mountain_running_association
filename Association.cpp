@@ -16,7 +16,7 @@ unsigned int Decision(int lower, int upper)
 		cin >> decision;
 		choice = strtol(decision.c_str(), &end, 10);
 
-    } while (choice <= 0 && (lower == upper)? (choice < lower) : (choice < lower || choice > upper));
+    } while ((lower == upper)? (choice < lower) : (choice < lower || choice > upper));
 
     return choice;
 }
@@ -71,9 +71,12 @@ int Association::Add_Race()
     cin >> name;
 
     Print_Tracks();
+	unsigned int track_id;
     cout << "Select a Track: ";
-    unsigned int track_id = Decision(2, tracks.size() + 1);
-
+	do
+	{
+		track_id = Decision(2, Track::Ids);
+	}while(tracks.find(track_id) == tracks.end());
     Race *temp = new Race(name, *tracks.find(track_id)->second);
     races.insert({temp->Id, temp});
 
@@ -181,7 +184,7 @@ int Association::Edit_Race(unsigned int id)
                     
                     Track *find_track = tracks.find(selected_track)->second;
 
-                    if(find_track->get_id() == selected_track)    
+                    if(find_track && find_track->get_id() == selected_track)    
                         *race = *find_track;
                     else
                     {
@@ -290,18 +293,27 @@ int Association::Edit_Race(unsigned int id)
                         race->Print();
                         cout << "Change the time of: ";
                         selected_member = Decision(0, 0);
-                        if(selected_member == race->race_participants.Runners.find(selected_member)->first)
+                        if(race->race_participants.Runners.end() != race->race_participants.Runners.find(selected_member))
                         {
                             string new_time;
                             char *end;
                             double new_time_value;
                             do
                             {
+								cout << "Iput new time: ";
                                 cin >> new_time;
                                 new_time_value = strtod(new_time.c_str(), &end);
-                            } while (new_time_value > 0);
+                            } while (new_time_value <= 0);
 
-                            race->race_participants.Times[selected_member-2] = new_time_value;
+							int i = 0;
+							for(const auto& runner : race->race_participants.Runners)
+							{
+								if(runner.first == selected_member)
+										break;
+								i++;
+							}
+
+                            race->race_participants.Times[i] = new_time_value;
                             race->Assign_places();
                             race->Declare_winner();
                             race->Where->Finish_race(race->Id);
@@ -374,7 +386,7 @@ int Association::Edit_League(unsigned int id)
             cout << "Race: " << race.second->Name << "Id " << race.second->Id << endl;
         cout << "Participants: " << endl;
         for(const auto& member : league->Get_Runners())
-            cout << "Runner: " << member.second->Name << "Id " << member.second << endl;
+            cout << "Runner: " << member.second->Name << "Id " << member.first << endl;
         
         cout << "What do you wish to edit: " << endl;
         cout << "Press any other key to go back" << endl;
@@ -418,7 +430,7 @@ int Association::Edit_League(unsigned int id)
                     select = Decision(0, 0);
                     if(select < 2)
                         return 2;
-                    else
+                    else if(races.find(select)->second)
                     {
                         league->Add_Race(*races.find(select)->second);
                         return 2;
@@ -498,7 +510,7 @@ int Association::Edit_League(unsigned int id)
                             league->Add_runner(*find_member);
                         else
                             cout << "Member not found" << endl;
-                    } while (select < 2);
+                    } while (select >= 2);
                     return 2;
                 }
                 for(const auto& member : league->Get_Runners())
@@ -522,7 +534,7 @@ int Association::Edit_League(unsigned int id)
                                 league->Remove_runner(*find_member);
                             else
                                 cout << "Member not found" << endl;
-                        } while (select != 0);
+                        } while (select >=2);
                     }
                     else 
                         cout << "There are no runners" << endl;
@@ -734,7 +746,7 @@ int Association::Edit_Track(unsigned int id)
                     cout << race.second->Name << " Id: " << race.second->Id << endl;
                 cout << "Press any other key to go back" << endl;
                 cout << "Edit?: ";
-                select = Decision(0, track->Get_Data().size() + 1);
+                select = Decision(0, Track::Ids);
                 if(select < 2)
                     return 4;
                 else
